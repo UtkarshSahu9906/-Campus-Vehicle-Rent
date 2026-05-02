@@ -32,7 +32,7 @@ public class VehicleDetailActivity extends AppCompatActivity {
         String mobile       = getIntent().getStringExtra("mobileNo");
         String ownerName    = getIntent().getStringExtra("ownerName");
         String ownerUid     = getIntent().getStringExtra("ownerUid");
-        String location     = getIntent().getStringExtra("location");
+        String pickupLocation = getIntent().getStringExtra("location");
 
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(vehicleType);
 
@@ -55,7 +55,7 @@ public class VehicleDetailActivity extends AppCompatActivity {
         tvType.setText(vehicleType);
         tvDesc.setText(description.isEmpty() ? "No description provided." : description);
         tvPrice.setText("₹" + String.format("%.0f", price) + " / hour");
-        tvLocation.setText(location != null ? location : "Location not specified");
+        tvLocation.setText(pickupLocation != null ? pickupLocation : "Location not specified");
         tvOwner.setText("Owner: " + ownerName);
         tvMobile.setText("Mobile: " + mobile);
 
