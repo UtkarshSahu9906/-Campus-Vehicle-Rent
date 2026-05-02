@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.chip.ChipGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -85,13 +86,44 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         findViewById(R.id.btnLocationPicker).setOnClickListener(v -> showToast("Location selection coming soon"));
         findViewById(R.id.btnNotifications).setOnClickListener(v -> showToast("No new notifications"));
         findViewById(R.id.btnWishlist).setOnClickListener(v -> showToast("Wishlist is empty"));
-        findViewById(R.id.btnProfile).setOnClickListener(v -> showToast("Profile settings coming soon"));
+        findViewById(R.id.btnProfile).setOnClickListener(v -> showRoleSwitchDialog());
 
         // Bottom Nav
         findViewById(R.id.navExplore).setOnClickListener(v -> showToast("Already on Explore"));
         findViewById(R.id.navOrders).setOnClickListener(v -> showToast("Order history coming soon"));
         findViewById(R.id.navRentals).setOnClickListener(v -> showToast("My Rentals coming soon"));
-        findViewById(R.id.navProfile).setOnClickListener(v -> showToast("Profile coming soon"));
+        findViewById(R.id.navProfile).setOnClickListener(v -> showRoleSwitchDialog());
+    }
+
+    private void showRoleSwitchDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Account")
+                .setMessage("Do you want to switch to Owner Mode to list your vehicles?")
+                .setPositiveButton("Switch to Owner", (dialog, which) -> {
+                    db.collection("users").document(mAuth.getUid())
+                            .update("role", "owner")
+                            .addOnSuccessListener(v -> {
+                                startActivity(new Intent(this, OwnerDashboardActivity.class));
+                                finish();
+                            });
+                })
+                .setNegativeButton("Cancel", null)
+                .setNeutralButton("Sign Out", (dialog, which) -> {
+                    signOut();
+                })
+                .show();
+    }
+
+    private void signOut() {
+        mAuth.signOut();
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail().build();
+        GoogleSignIn.getClient(this, gso).signOut().addOnCompleteListener(t -> {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
     }
 
     private void showToast(String msg) {
