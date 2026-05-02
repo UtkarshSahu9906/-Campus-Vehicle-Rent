@@ -31,6 +31,7 @@ public class VehicleDetailActivity extends AppCompatActivity {
         double price        = getIntent().getDoubleExtra("pricePerHour", 0);
         String mobile       = getIntent().getStringExtra("mobileNo");
         String ownerName    = getIntent().getStringExtra("ownerName");
+        String ownerUid     = getIntent().getStringExtra("ownerUid");
         String location     = getIntent().getStringExtra("location");
 
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(vehicleType);
@@ -43,6 +44,7 @@ public class VehicleDetailActivity extends AppCompatActivity {
         TextView      tvMobile    = findViewById(R.id.tvMobile);
         TextView      tvLocation  = findViewById(R.id.tvLocation);
         MaterialButton btnWhatsApp = findViewById(R.id.btnWhatsApp);
+        MaterialButton btnChat     = findViewById(R.id.btnChat);
 
         Glide.with(this)
                 .load(imageUrl)
@@ -58,8 +60,19 @@ public class VehicleDetailActivity extends AppCompatActivity {
         tvMobile.setText("Mobile: " + mobile);
 
         // ── WhatsApp deep link ─────────────────────────────────────────────
-        // Opens WhatsApp chat with the owner's number pre-filled with a message
         btnWhatsApp.setOnClickListener(v -> openWhatsApp(mobile, vehicleType));
+
+        // ── In-app Chat ───────────────────────────────────────────────────
+        btnChat.setOnClickListener(v -> {
+            if (ownerUid != null && ownerUid.equals(com.google.firebase.auth.FirebaseAuth.getInstance().getUid())) {
+                Toast.makeText(this, "This is your listing", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent chatIntent = new Intent(this, ChatActivity.class);
+                chatIntent.putExtra("receiverId", ownerUid);
+                chatIntent.putExtra("receiverName", ownerName);
+                startActivity(chatIntent);
+            }
+        });
     }
 
     private void openWhatsApp(String mobile, String vehicleType) {

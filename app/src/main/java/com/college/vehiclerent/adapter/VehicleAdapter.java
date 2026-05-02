@@ -68,6 +68,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             intent.putExtra("pricePerHour", v.getPricePerHour());
             intent.putExtra("mobileNo",     v.getMobileNo());
             intent.putExtra("ownerName",    v.getOwnerName());
+            intent.putExtra("ownerUid",     v.getOwnerUid());
             context.startActivity(intent);
         });
 
