@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
 public class AddVehicleActivity extends AppCompatActivity {
@@ -164,14 +167,55 @@ public class AddVehicleActivity extends AppCompatActivity {
     }
 
     private void uploadImageThenSave(String type, String desc, double price, String mobile) {
+        byte[] data = getCompressedImageData(imageUri);
+        if (data == null) {
+            onSaveFail("Failed to process image");
+            return;
+        }
+
         String path = "vehicles/" + UUID.randomUUID().toString() + ".jpg";
         StorageReference ref = storage.getReference().child(path);
 
-        ref.putFile(imageUri)
+        ref.putBytes(data)
                 .addOnSuccessListener(snap -> ref.getDownloadUrl()
                         .addOnSuccessListener(uri -> saveToFirestore(type, desc, price, mobile, uri.toString()))
                         .addOnFailureListener(e -> onSaveFail("Failed to get image URL")))
                 .addOnFailureListener(e -> onSaveFail("Image upload failed: " + e.getMessage()));
+    }
+
+    private byte[] getCompressedImageData(Uri uri) {
+        try {
+            // 1. Downsample for memory efficiency
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+            options.inSampleSize = calculateInSampleSize(options, 1024, 1024);
+            options.inJustDecodeBounds = false;
+
+            Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+            if (bitmap == null) return null;
+
+            // 2. Compress to JPEG
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            return baos.toByteArray();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
     }
 
     private void saveToFirestore(String type, String desc, double price, String mobile, String imageUrl) {
