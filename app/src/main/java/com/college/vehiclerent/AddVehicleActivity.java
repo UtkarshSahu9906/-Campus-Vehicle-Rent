@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
 import java.util.UUID;
 
 public class AddVehicleActivity extends AppCompatActivity {
