@@ -104,7 +104,7 @@ public class CustomerDashboardActivity extends AppCompatActivity {
                         v.setId(doc.getId());
                         allVehicles.add(v);
                     }
-                    filter(etSearch.getText().toString());
+                    filter();
                 });
     }
 
