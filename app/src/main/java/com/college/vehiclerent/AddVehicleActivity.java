@@ -94,6 +94,8 @@ public class AddVehicleActivity extends AppCompatActivity {
         } else {
             getSupportActionBar().setTitle("Add Vehicle");
         }
+        imgVehicle.setOnClickListener(v -> checkPermissionAndPick());
+        btnSave.setOnClickListener(v -> validateAndSave());
     }
 
     private void setupCategorySpinner() {
@@ -101,10 +103,6 @@ public class AddVehicleActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, categories);
         spinnerCategory.setAdapter(adapter);
-    }
-
-        imgVehicle.setOnClickListener(v -> checkPermissionAndPick());
-        btnSave.setOnClickListener(v -> validateAndSave());
     }
 
     // ── Permission handling ────────────────────────────────────────────────────
