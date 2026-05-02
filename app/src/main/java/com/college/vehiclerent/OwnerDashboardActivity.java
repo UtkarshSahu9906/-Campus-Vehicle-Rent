@@ -1,0 +1,118 @@
+package com.college.vehiclerent;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.college.vehiclerent.adapter.VehicleAdapter;
+import com.college.vehiclerent.model.Vehicle;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class OwnerDashboardActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private VehicleAdapter adapter;
+    private List<Vehicle> vehicleList;
+    private TextView tvEmpty;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private ListenerRegistration listenerReg;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_owner_dashboard);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) getSupportActionBar().setTitle("My Vehicles");
+
+        db    = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        vehicleList = new ArrayList<>();
+
+        tvEmpty     = findViewById(R.id.tvEmpty);
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // true = owner mode (shows delete on long-press)
+        adapter = new VehicleAdapter(this, vehicleList, true);
+        recyclerView.setAdapter(adapter);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> startActivity(new Intent(this, AddVehicleActivity.class)));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        listenToMyVehicles();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (listenerReg != null) listenerReg.remove();
+    }
+
+    private void listenToMyVehicles() {
+        String uid = mAuth.getCurrentUser().getUid();
+        listenerReg = db.collection("vehicles")
+                .whereEqualTo("ownerUid", uid)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null || value == null) return;
+                    vehicleList.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        Vehicle v = doc.toObject(Vehicle.class);
+                        v.setId(doc.getId());
+                        vehicleList.add(v);
+                    }
+                    adapter.notifyDataSetChanged();
+                    tvEmpty.setVisibility(vehicleList.isEmpty() ? View.VISIBLE : View.GONE);
+                });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_signout) {
+            signOut();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void signOut() {
+        mAuth.signOut();
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail().build();
+        GoogleSignIn.getClient(this, gso).signOut().addOnCompleteListener(task -> {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
+    }
+}

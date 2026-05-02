@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Campus Vehicle Rent</string>
+    <!--
+        IMPORTANT: Replace the value below with your actual Web Client ID from
+        Firebase Console → Authentication → Sign-in method → Google → Web SDK configuration
+    -->
+    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID_HERE</string>
+</resources>
