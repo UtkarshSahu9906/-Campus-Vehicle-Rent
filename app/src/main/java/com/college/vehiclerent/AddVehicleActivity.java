@@ -174,6 +174,7 @@ public class AddVehicleActivity extends AppCompatActivity {
 
         MediaManager.get().upload(data)
                 .option("folder", "vehicles")
+                .option("upload_preset", "ml_default1121")
                 .callback(new UploadCallback() {
                     @Override
                     public void onStart(String requestId) {}
