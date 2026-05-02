@@ -217,7 +217,7 @@
                             android:textStyle="bold"
                             app:backgroundTint="@color/white"
                             app:cornerRadius="18dp"
-                            app:textColor="@color/primary" />
+                            android:textColor="@color/primary" />
                     </LinearLayout>
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
