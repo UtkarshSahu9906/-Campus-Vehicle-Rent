@@ -1,10 +1,14 @@
 package com.college.vehiclerent.model;
 
+import com.google.firebase.firestore.Exclude;
+
 public class Vehicle {
     private String id;
     private String ownerUid;
     private String ownerName;
-    private String vehicleType;
+    private String vehicleType; // Specific model name (e.g. Activa 6G)
+    private String category;    // Bike, Scooter, Car, Cycle
+    private String location;    // e.g. Hostel A, Main Gate
     private String description;
     private String imageUrl;
     private double pricePerHour;
@@ -14,12 +18,14 @@ public class Vehicle {
     // Required empty constructor for Firestore
     public Vehicle() {}
 
-    public Vehicle(String ownerUid, String ownerName, String vehicleType,
-                   String description, String imageUrl,
+    public Vehicle(String ownerUid, String ownerName, String vehicleType, String category,
+                   String location, String description, String imageUrl,
                    double pricePerHour, String mobileNo) {
         this.ownerUid = ownerUid;
         this.ownerName = ownerName;
         this.vehicleType = vehicleType;
+        this.category = category;
+        this.location = location;
         this.description = description;
         this.imageUrl = imageUrl;
         this.pricePerHour = pricePerHour;
@@ -27,6 +33,7 @@ public class Vehicle {
         this.available = true;
     }
 
+    @Exclude
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -38,6 +45,12 @@ public class Vehicle {
 
     public String getVehicleType() { return vehicleType; }
     public void setVehicleType(String vehicleType) { this.vehicleType = vehicleType; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

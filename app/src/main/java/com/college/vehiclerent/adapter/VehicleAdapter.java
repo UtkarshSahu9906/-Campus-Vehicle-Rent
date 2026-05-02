@@ -47,6 +47,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
         holder.tvType.setText(v.getVehicleType());
         holder.tvPrice.setText("₹" + String.format("%.0f", v.getPricePerHour()) + "/hr");
+        holder.tvLocation.setText(v.getLocation() != null ? v.getLocation() : "Unknown");
+        holder.tvCategory.setText(v.getCategory());
         holder.tvSub.setText(isOwnerMode ? v.getDescription() : "by " + v.getOwnerName());
 
         Glide.with(context)
@@ -59,6 +61,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, VehicleDetailActivity.class);
             intent.putExtra("vehicleType",  v.getVehicleType());
+            intent.putExtra("category",     v.getCategory());
+            intent.putExtra("location",     v.getLocation());
             intent.putExtra("description",  v.getDescription());
             intent.putExtra("imageUrl",     v.getImageUrl());
             intent.putExtra("pricePerHour", v.getPricePerHour());
@@ -94,6 +98,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         Intent intent = new Intent(context, AddVehicleActivity.class);
         intent.putExtra("vehicleId",    v.getId());
         intent.putExtra("vehicleType",  v.getVehicleType());
+        intent.putExtra("category",     v.getCategory());
+        intent.putExtra("location",     v.getLocation());
         intent.putExtra("description",  v.getDescription());
         intent.putExtra("imageUrl",     v.getImageUrl());
         intent.putExtra("pricePerHour", v.getPricePerHour());
@@ -121,7 +127,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     static class VehicleViewHolder extends RecyclerView.ViewHolder {
         ImageView imgVehicle;
-        TextView  tvType, tvPrice, tvSub;
+        TextView  tvType, tvPrice, tvSub, tvLocation, tvCategory;
 
         VehicleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -129,6 +135,8 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             tvType     = itemView.findViewById(R.id.tvVehicleType);
             tvPrice    = itemView.findViewById(R.id.tvPrice);
             tvSub      = itemView.findViewById(R.id.tvSub);
+            tvLocation = itemView.findViewById(R.id.tvLocation);
+            tvCategory = itemView.findViewById(R.id.tvCategory);
         }
     }
 }

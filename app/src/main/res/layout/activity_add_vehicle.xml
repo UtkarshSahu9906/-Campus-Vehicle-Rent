@@ -85,13 +85,13 @@
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Vehicle Type -->
+            <!-- Vehicle Type (Model) -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:hint="Vehicle Type (e.g. Electric Bike)"
+                android:hint="Vehicle Model (e.g. Activa 6G)"
                 app:boxCornerRadiusBottomEnd="12dp"
                 app:boxCornerRadiusBottomStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"
@@ -100,6 +100,46 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etVehicleType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Category -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Category"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:startIconDrawable="@android:drawable/ic_menu_sort_by_size">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Location -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Pickup Location (e.g. Hostel A)"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:startIconDrawable="@android:drawable/ic_dialog_map">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />

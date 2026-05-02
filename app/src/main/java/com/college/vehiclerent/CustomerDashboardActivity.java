@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.google.android.material.chip.ChipGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,6 +36,8 @@ public class CustomerDashboardActivity extends AppCompatActivity {
     private List<Vehicle> filteredList   = new ArrayList<>();
     private TextView      tvEmpty;
     private EditText      etSearch;
+    private ChipGroup     chipGroup;
+    private String        selectedCategory = "All";
 
     private FirebaseFirestore db;
     private FirebaseAuth      mAuth;
@@ -54,6 +57,7 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
         tvEmpty      = findViewById(R.id.tvEmpty);
         etSearch     = findViewById(R.id.etSearch);
+        chipGroup    = findViewById(R.id.chipGroup);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -63,8 +67,17 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
         etSearch.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
-            public void onTextChanged(CharSequence s, int st, int b, int c) { filter(s.toString()); }
+            public void onTextChanged(CharSequence s, int st, int b, int c) { filter(); }
             public void afterTextChanged(Editable s) {}
+        });
+
+        chipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.chipBike) selectedCategory = "Bike";
+            else if (checkedId == R.id.chipScooter) selectedCategory = "Scooter";
+            else if (checkedId == R.id.chipCar) selectedCategory = "Car";
+            else if (checkedId == R.id.chipCycle) selectedCategory = "Cycle";
+            else selectedCategory = "All";
+            filter();
         });
     }
 
@@ -95,20 +108,24 @@ public class CustomerDashboardActivity extends AppCompatActivity {
                 });
     }
 
-    private void filter(String query) {
+    private void filter() {
+        String query = etSearch.getText().toString().trim().toLowerCase();
         filteredList.clear();
-        if (query.trim().isEmpty()) {
-            filteredList.addAll(allVehicles);
-        } else {
-            String q = query.toLowerCase();
-            for (Vehicle v : allVehicles) {
-                if (v.getVehicleType().toLowerCase().contains(q) ||
-                    v.getDescription().toLowerCase().contains(q) ||
-                    v.getOwnerName().toLowerCase().contains(q)) {
-                    filteredList.add(v);
-                }
+
+        for (Vehicle v : allVehicles) {
+            boolean matchesCategory = selectedCategory.equals("All") || 
+                                     (v.getCategory() != null && v.getCategory().equalsIgnoreCase(selectedCategory));
+            
+            boolean matchesSearch = query.isEmpty() || 
+                                   (v.getVehicleType() != null && v.getVehicleType().toLowerCase().contains(query)) ||
+                                   (v.getLocation() != null && v.getLocation().toLowerCase().contains(query)) ||
+                                   (v.getDescription() != null && v.getDescription().toLowerCase().contains(query));
+
+            if (matchesCategory && matchesSearch) {
+                filteredList.add(v);
             }
         }
+        
         adapter.notifyDataSetChanged();
         tvEmpty.setVisibility(filteredList.isEmpty() ? View.VISIBLE : View.GONE);
     }

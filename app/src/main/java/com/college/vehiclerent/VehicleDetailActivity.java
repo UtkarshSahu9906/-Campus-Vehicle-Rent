@@ -31,6 +31,7 @@ public class VehicleDetailActivity extends AppCompatActivity {
         double price        = getIntent().getDoubleExtra("pricePerHour", 0);
         String mobile       = getIntent().getStringExtra("mobileNo");
         String ownerName    = getIntent().getStringExtra("ownerName");
+        String location     = getIntent().getStringExtra("location");
 
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(vehicleType);
 
@@ -40,6 +41,7 @@ public class VehicleDetailActivity extends AppCompatActivity {
         TextView      tvPrice     = findViewById(R.id.tvPrice);
         TextView      tvOwner     = findViewById(R.id.tvOwner);
         TextView      tvMobile    = findViewById(R.id.tvMobile);
+        TextView      tvLocation  = findViewById(R.id.tvLocation);
         MaterialButton btnWhatsApp = findViewById(R.id.btnWhatsApp);
 
         Glide.with(this)
@@ -51,6 +53,7 @@ public class VehicleDetailActivity extends AppCompatActivity {
         tvType.setText(vehicleType);
         tvDesc.setText(description.isEmpty() ? "No description provided." : description);
         tvPrice.setText("₹" + String.format("%.0f", price) + " / hour");
+        tvLocation.setText(location != null ? location : "Location not specified");
         tvOwner.setText("Owner: " + ownerName);
         tvMobile.setText("Mobile: " + mobile);
 
