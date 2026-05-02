@@ -49,4 +49,7 @@ dependencies {
 
     // Circle image view for profile pics
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Cloudinary for image management
+    implementation 'com.cloudinary:cloudinary-android:3.0.2'
 }

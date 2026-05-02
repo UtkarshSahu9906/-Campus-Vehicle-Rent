@@ -22,11 +22,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.college.vehiclerent.model.Vehicle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
@@ -44,7 +45,6 @@ public class AddVehicleActivity extends AppCompatActivity {
     private Uri imageUri;
     private FirebaseAuth      mAuth;
     private FirebaseFirestore db;
-    private FirebaseStorage   storage;
 
     // If editing, store the vehicleId
     private String editVehicleId = null;
@@ -62,7 +62,6 @@ public class AddVehicleActivity extends AppCompatActivity {
 
         mAuth   = FirebaseAuth.getInstance();
         db      = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
 
         imgVehicle    = findViewById(R.id.imgVehicle);
         etVehicleType = findViewById(R.id.etVehicleType);
@@ -173,14 +172,25 @@ public class AddVehicleActivity extends AppCompatActivity {
             return;
         }
 
-        String path = "vehicles/" + UUID.randomUUID().toString() + ".jpg";
-        StorageReference ref = storage.getReference().child(path);
-
-        ref.putBytes(data)
-                .addOnSuccessListener(snap -> ref.getDownloadUrl()
-                        .addOnSuccessListener(uri -> saveToFirestore(type, desc, price, mobile, uri.toString()))
-                        .addOnFailureListener(e -> onSaveFail("Failed to get image URL")))
-                .addOnFailureListener(e -> onSaveFail("Image upload failed: " + e.getMessage()));
+        MediaManager.get().upload(data)
+                .option("folder", "vehicles")
+                .callback(new UploadCallback() {
+                    @Override
+                    public void onStart(String requestId) {}
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) {}
+                    @Override
+                    public void onSuccess(String requestId, Map resultData) {
+                        String imageUrl = (String) resultData.get("secure_url");
+                        saveToFirestore(type, desc, price, mobile, imageUrl);
+                    }
+                    @Override
+                    public void onError(String requestId, ErrorInfo error) {
+                        onSaveFail("Cloudinary Upload Error: " + error.getDescription());
+                    }
+                    @Override
+                    public void onReschedule(String requestId, ErrorInfo error) {}
+                }).dispatch();
     }
 
     private byte[] getCompressedImageData(Uri uri) {
