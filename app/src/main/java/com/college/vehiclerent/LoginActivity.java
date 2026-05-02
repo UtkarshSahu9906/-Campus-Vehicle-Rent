@@ -53,15 +53,6 @@ public class LoginActivity extends AppCompatActivity {
         btnGoogle.setOnClickListener(v -> signIn());
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // If already signed in, skip login screen
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            checkUserRoleAndNavigate(currentUser.getUid());
-        }
-    }
 
     private void signIn() {
         progressBar.setVisibility(View.VISIBLE);
