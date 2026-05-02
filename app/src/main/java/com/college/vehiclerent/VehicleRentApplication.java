@@ -12,6 +12,7 @@ public class VehicleRentApplication extends Application {
         // Initialize Cloudinary
         Map<String, String> config = new HashMap<>();
         config.put("cloud_name", "dzjwrkopb");
+        config.put("api_key", "573213361223711");
         config.put("secure", "true");
         MediaManager.init(this, config);
     }
