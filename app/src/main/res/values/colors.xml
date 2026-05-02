@@ -1,14 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#1565C0</color>
-    <color name="primary_dark">#0D47A1</color>
-    <color name="accent">#FF6F00</color>
-    <color name="whatsapp_green">#25D366</color>
-    <color name="bg_light">#F5F7FA</color>
-    <color name="card_bg">#E8EAF0</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="divider">#E0E0E0</color>
+    <!-- Core Brand Colors -->
+    <color name="primary">#4F46E5</color>
+    <color name="primary_light">#818CF8</color>
+    <color name="primary_dark">#3730A3</color>
+    <color name="accent">#06B6D4</color>
+    
+    <!-- UI Surface Colors -->
+    <color name="background">#F8FAFC</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="card_outline">#E2E8F0</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="text_muted">#94A3B8</color>
+    
+    <!-- Semantic Colors -->
+    <color name="whatsapp_green">#22C55E</color>
+    <color name="divider">#F1F5F9</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    
+    <!-- Gradients (using dummy colors for XML definitions) -->
+    <color name="gradient_start">#4F46E5</color>
+    <color name="gradient_end">#06B6D4</color>
 </resources>
