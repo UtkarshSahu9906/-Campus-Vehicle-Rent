@@ -31,7 +31,13 @@ import com.college.vehiclerent.model.Vehicle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import android.location.Address;
+import android.location.Geocoder;
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,8 +49,9 @@ public class AddVehicleActivity extends AppCompatActivity {
     private ImageView imgVehicle;
     private EditText  etVehicleType, etDescription, etPrice, etMobile, etLocation;
     private AutoCompleteTextView spinnerCategory;
-    private Button    btnSave;
+    private Button    btnSave, btnGetCurrentLocation;
     private ProgressBar progressBar;
+    private FusedLocationProviderClient fusedLocationClient;
 
     private Uri imageUri;
     private FirebaseAuth      mAuth;
@@ -57,6 +64,8 @@ public class AddVehicleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vehicle);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +84,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         etPrice       = findViewById(R.id.etPrice);
         etMobile      = findViewById(R.id.etMobile);
         btnSave       = findViewById(R.id.btnSave);
+        btnGetCurrentLocation = findViewById(R.id.btnGetCurrentLocation);
         progressBar   = findViewById(R.id.progressBar);
 
         setupCategorySpinner();
@@ -96,6 +106,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         }
         imgVehicle.setOnClickListener(v -> checkPermissionAndPick());
         btnSave.setOnClickListener(v -> validateAndSave());
+        btnGetCurrentLocation.setOnClickListener(v -> fetchLocation());
     }
 
     private void setupCategorySpinner() {
@@ -103,6 +114,30 @@ public class AddVehicleActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, categories);
         spinnerCategory.setAdapter(adapter);
+    }
+
+    private void fetchLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 300);
+            return;
+        }
+
+        fusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                try {
+                    Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        String address = addresses.get(0).getAddressLine(0);
+                        etLocation.setText(address);
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(this, "Could not get address", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Turn on GPS", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // ── Permission handling ────────────────────────────────────────────────────

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.material.chip.ChipGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,6 +80,22 @@ public class CustomerDashboardActivity extends AppCompatActivity {
             else selectedCategory = "All";
             filter();
         });
+
+        // Header Buttons
+        findViewById(R.id.btnLocationPicker).setOnClickListener(v -> showToast("Location selection coming soon"));
+        findViewById(R.id.btnNotifications).setOnClickListener(v -> showToast("No new notifications"));
+        findViewById(R.id.btnWishlist).setOnClickListener(v -> showToast("Wishlist is empty"));
+        findViewById(R.id.btnProfile).setOnClickListener(v -> showToast("Profile settings coming soon"));
+
+        // Bottom Nav
+        findViewById(R.id.navExplore).setOnClickListener(v -> showToast("Already on Explore"));
+        findViewById(R.id.navOrders).setOnClickListener(v -> showToast("Order history coming soon"));
+        findViewById(R.id.navRentals).setOnClickListener(v -> showToast("My Rentals coming soon"));
+        findViewById(R.id.navProfile).setOnClickListener(v -> showToast("Profile coming soon"));
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

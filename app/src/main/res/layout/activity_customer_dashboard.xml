@@ -21,10 +21,14 @@
             android:paddingTop="12dp">
 
             <LinearLayout
+                android:id="@+id/btnLocationPicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -59,24 +63,36 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/btnNotifications"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="20dp"
                 android:src="@android:drawable/ic_popup_reminder"
-                app:tint="@color/text_primary" />
+                app:tint="@color/text_primary"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
 
             <ImageView
+                android:id="@+id/btnWishlist"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="20dp"
                 android:src="@android:drawable/btn_star_big_off"
-                app:tint="@color/text_primary" />
+                app:tint="@color/text_primary"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
 
             <ImageView
+                android:id="@+id/btnProfile"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_myplaces"
-                app:tint="@color/text_primary" />
+                app:tint="@color/text_primary"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless" />
         </LinearLayout>
 
         <!-- Search Bar -->
@@ -116,7 +132,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Categories Horizontal List (Using Chips for now as placeholder for circle icons) -->
+            <!-- Categories Horizontal List -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -208,6 +224,7 @@
                             android:textStyle="bold" />
 
                         <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnClaim"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             android:layout_marginTop="12dp"
@@ -249,7 +266,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:paddingBottom="80dp" />
+                android:paddingBottom="100dp" />
 
         </LinearLayout>
 
@@ -257,13 +274,16 @@
 
     <!-- Custom Bottom Navigation Bar -->
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/bottomNavCard"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         app:cardCornerRadius="32dp"
         app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/surface">
+        app:cardBackgroundColor="@color/surface"
+        android:clickable="true"
+        android:focusable="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -272,11 +292,15 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/navExplore"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -292,11 +316,15 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/navOrders"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -311,11 +339,15 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/navRentals"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -330,11 +362,15 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/navProfile"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground">
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
