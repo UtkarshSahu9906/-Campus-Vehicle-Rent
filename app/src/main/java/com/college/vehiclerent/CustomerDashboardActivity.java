@@ -121,6 +121,15 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_switch_role) {
+            db.collection("users").document(mAuth.getUid())
+                    .update("role", "owner")
+                    .addOnSuccessListener(v -> {
+                        startActivity(new Intent(this, OwnerDashboardActivity.class));
+                        finish();
+                    });
+            return true;
+        }
         if (item.getItemId() == R.id.action_signout) {
             mAuth.signOut();
             GoogleSignInOptions gso = new GoogleSignInOptions

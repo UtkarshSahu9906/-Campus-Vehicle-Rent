@@ -97,6 +97,15 @@ public class OwnerDashboardActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_switch_role) {
+            db.collection("users").document(mAuth.getUid())
+                    .update("role", "customer")
+                    .addOnSuccessListener(v -> {
+                        startActivity(new Intent(this, CustomerDashboardActivity.class));
+                        finish();
+                    });
+            return true;
+        }
         if (item.getItemId() == R.id.action_signout) {
             signOut();
             return true;
