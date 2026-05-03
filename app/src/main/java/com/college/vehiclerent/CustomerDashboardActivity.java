@@ -83,16 +83,12 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         });
 
         // Header Buttons
-        findViewById(R.id.btnLocationPicker).setOnClickListener(v -> showToast("Location selection coming soon"));
-        findViewById(R.id.btnNotifications).setOnClickListener(v -> showToast("No new notifications"));
-        findViewById(R.id.btnWishlist).setOnClickListener(v -> showToast("Wishlist is empty"));
-        findViewById(R.id.btnProfile).setOnClickListener(v -> showRoleSwitchDialog());
+        findViewById(R.id.ivProfile).setOnClickListener(v -> showRoleSwitchDialog());
 
         // Bottom Nav
         findViewById(R.id.navExplore).setOnClickListener(v -> showToast("Already on Explore"));
-        findViewById(R.id.navOrders).setOnClickListener(v -> showToast("Order history coming soon"));
-        findViewById(R.id.navRentals).setOnClickListener(v -> showToast("My Rentals coming soon"));
-        findViewById(R.id.navProfile).setOnClickListener(v -> showRoleSwitchDialog());
+        findViewById(R.id.navOrders).setOnClickListener(v -> showToast("No active bookings"));
+        findViewById(R.id.navSwitchRole).setOnClickListener(v -> showRoleSwitchDialog());
     }
 
     private void showRoleSwitchDialog() {
