@@ -60,8 +60,10 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         tvEmpty      = findViewById(R.id.tvEmpty);
         etSearch     = findViewById(R.id.etSearch);
         chipGroup    = findViewById(R.id.chipGroup);
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = findViewById(R.id.rvVehicles);
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }
 
         // false = customer mode (no delete, shows owner name)
         adapter = new VehicleAdapter(this, filteredList, false);
