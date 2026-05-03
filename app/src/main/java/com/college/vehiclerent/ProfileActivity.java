@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.college.vehiclerent.model.RentalSession;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +48,34 @@ public class ProfileActivity extends AppCompatActivity {
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.btnSignOut).setOnClickListener(v -> signOut());
+        
+        MaterialButton btnSwitch = findViewById(R.id.btnSwitchRole);
+        setupSwitchButton(btnSwitch, user.getUid());
+    }
+
+    private void setupSwitchButton(MaterialButton btn, String uid) {
+        db.collection("users").document(uid).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                String role = doc.getString("role");
+                if ("owner".equals(role)) {
+                    btn.setText("Switch to Customer");
+                    btn.setOnClickListener(v -> switchRole(uid, "customer", CustomerDashboardActivity.class));
+                } else {
+                    btn.setText("Switch to Owner");
+                    btn.setOnClickListener(v -> switchRole(uid, "owner", OwnerDashboardActivity.class));
+                }
+            }
+        });
+    }
+
+    private void switchRole(String uid, String newRole, Class<?> targetActivity) {
+        db.collection("users").document(uid).update("role", newRole)
+                .addOnSuccessListener(a -> {
+                    Intent intent = new Intent(this, targetActivity);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                });
     }
 
     private void initViews() {

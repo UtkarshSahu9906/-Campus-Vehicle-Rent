@@ -60,6 +60,14 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         // Profile icon → open profile
         findViewById(R.id.ivOwnerProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
 
+        findViewById(R.id.btnSwitchToCustomer).setOnClickListener(v -> {
+            db.collection("users").document(mAuth.getUid()).update("role", "customer")
+                    .addOnSuccessListener(a -> {
+                        startActivity(new Intent(this, CustomerDashboardActivity.class));
+                        finish();
+                    });
+        });
+
         checkActiveRentals();
     }
 
