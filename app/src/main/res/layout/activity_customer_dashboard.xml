@@ -8,118 +8,80 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface"
+        android:background="@color/background"
         app:elevation="0dp">
 
-        <!-- Top Header: Location & Icons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
             android:paddingTop="12dp">
 
             <LinearLayout
-                android:id="@+id/btnLocationPicker"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pickup from"
-                    android:textColor="@color/text_muted"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
+                android:gravity="center_vertical">
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
+                    android:layout_weight="1"
+                    android:orientation="vertical">
                     <TextView
-                        android:id="@+id/tvCurrentLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Main Campus"
+                        android:text="Explore"
                         android:textColor="@color/text_primary"
-                        android:textSize="14sp"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginStart="4dp"
-                        android:src="@android:drawable/arrow_down_float"
-                        app:tint="@color/text_primary" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rides available near you"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
                 </LinearLayout>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:src="@mipmap/ic_launcher"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+                    android:padding="2dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/btnNotifications"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="20dp"
-                android:src="@android:drawable/ic_popup_reminder"
-                app:tint="@color/text_primary"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless" />
-
-            <ImageView
-                android:id="@+id/btnWishlist"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="20dp"
-                android:src="@android:drawable/btn_star_big_off"
-                app:tint="@color/text_primary"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless" />
-
-            <ImageView
-                android:id="@+id/btnProfile"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_myplaces"
-                app:tint="@color/text_primary"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless" />
-        </LinearLayout>
-
-        <!-- Search Bar -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/bg_search_bar_light">
-
-            <EditText
-                android:id="@+id/etSearch"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:drawableStart="@android:drawable/ic_menu_search"
-                android:drawablePadding="12dp"
-                android:hint="Search for bikes, cars, cycles..."
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:paddingHorizontal="12dp"
-                android:textColor="@color/text_primary"
-                android:textColorHint="@color/text_muted"
-                android:textSize="14sp" />
-        </FrameLayout>
-
+                android:layout_height="56dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp">
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_menu_search"
+                        app:tint="@color/text_muted" />
+                    <EditText
+                        android:id="@+id/etSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="12dp"
+                        android:background="@null"
+                        android:hint="Search for bikes, cars..."
+                        android:inputType="text"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -130,167 +92,92 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="100dp">
 
-            <!-- Categories Horizontal List -->
+            <!-- Category Chips -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="8dp"
-                android:scrollbars="none">
-
+                android:scrollbars="none"
+                android:paddingVertical="12dp"
+                android:clipToPadding="false"
+                android:paddingHorizontal="20dp">
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    app:singleSelection="true"
-                    app:selectionRequired="true">
-
+                    app:singleSelection="true">
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipAll"
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="All Rides"
-                        android:checked="true" />
-
+                        android:text="All"
+                        android:checked="true"
+                        app:chipCornerRadius="12dp" />
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipBike"
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bikes" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipScooter"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Scooters" />
-
+                        android:text="Bike"
+                        app:chipCornerRadius="12dp" />
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipCar"
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cars" />
-
+                        android:text="Car"
+                        app:chipCornerRadius="12dp" />
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipScooter"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Scooter"
+                        app:chipCornerRadius="12dp" />
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipCycle"
                         style="@style/Widget.MaterialComponents.Chip.Choice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cycles" />
-
+                        android:text="Cycle"
+                        app:chipCornerRadius="12dp" />
                 </com.google.android.material.chip.ChipGroup>
             </HorizontalScrollView>
 
-            <!-- Featured Banner -->
-            <com.google.android.material.card.MaterialCardView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvVehicles"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_margin="16dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_banner_gradient">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical"
-                        android:padding="20dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Summer Special"
-                            android:textColor="@color/white"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="UP TO 50% OFF\nON FIRST RIDE"
-                            android:textColor="@color/white"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnClaim"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:layout_marginTop="12dp"
-                            android:paddingHorizontal="16dp"
-                            android:text="CLAIM NOW"
-                            android:textSize="10sp"
-                            android:textStyle="bold"
-                            app:backgroundTint="@color/white"
-                            app:cornerRadius="18dp"
-                            android:textColor="@color/primary" />
-                    </LinearLayout>
-                </FrameLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="Rides Near You"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:paddingHorizontal="20dp"
+                android:clipToPadding="false" />
 
-            <TextView
-                android:id="@+id/tvEmpty"
+            <ProgressBar
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="48dp"
-                android:text="No vehicles found matching your criteria."
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:visibility="gone" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingBottom="100dp" />
+                android:layout_marginTop="40dp" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Custom Bottom Navigation Bar -->
+    <!-- Professional Sticky Bottom Navigation -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottomNavCard"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="72dp"
         android:layout_gravity="bottom"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="32dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="@color/surface"
-        android:clickable="true"
-        android:focusable="true">
-
+        android:layout_margin="20dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        app:strokeWidth="0dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
+            android:orientation="horizontal"
+            android:gravity="center">
             <LinearLayout
                 android:id="@+id/navExplore"
                 android:layout_width="0dp"
@@ -311,10 +198,9 @@
                     android:layout_height="wrap_content"
                     android:text="Explore"
                     android:textColor="@color/primary"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
             </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/navOrders"
                 android:layout_width="0dp"
@@ -333,13 +219,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Orders"
+                    android:text="My Bookings"
                     android:textColor="@color/text_muted"
-                    android:textSize="10sp" />
+                    android:textSize="11sp" />
             </LinearLayout>
-
             <LinearLayout
-                android:id="@+id/navRentals"
+                android:id="@+id/navSwitchRole"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -351,41 +236,16 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_my_calendar"
+                    android:src="@android:drawable/ic_menu_revert"
                     app:tint="@color/text_muted" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rentals"
+                    android:text="Switch Role"
                     android:textColor="@color/text_muted"
-                    android:textSize="10sp" />
+                    android:textSize="11sp" />
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/navProfile"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_manage"
-                    app:tint="@color/text_muted" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Profile"
-                    android:textColor="@color/text_muted"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
