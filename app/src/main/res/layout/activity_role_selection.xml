@@ -6,15 +6,23 @@
     android:background="@color/background"
     android:padding="24dp">
 
+    <!-- Glow -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_login_top"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="Choose Your Role"
+        android:layout_marginTop="80dp"
+        android:text="How will you use\nCampus Ride?"
         android:textColor="@color/text_primary"
         android:textSize="32sp"
         android:textStyle="bold"
+        android:lineSpacingExtra="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,10 +30,10 @@
         android:id="@+id/subHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="How would you like to use the app today? You can switch roles anytime later."
-        android:textColor="@color/text_secondary"
-        android:textSize="16sp"
+        android:layout_marginTop="12dp"
+        android:text="You can switch roles anytime from settings"
+        android:textColor="@color/text_muted"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header" />
@@ -34,28 +42,38 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/btnOwner"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_marginTop="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="24dp"
-        app:cardElevation="2dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/surface"
         app:layout_constraintTop_toBottomOf="@id/subHeader"
         app:strokeColor="@color/card_outline"
         app:strokeWidth="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="24dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🚗"
-                android:textSize="48sp" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/primary_light">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="🚗"
+                    android:textSize="28sp" />
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -66,18 +84,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Vehicle Owner"
-                    android:textColor="@color/primary"
-                    android:textSize="20sp"
+                    android:text="I have a vehicle"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="List your vehicle &amp; earn money"
+                    android:text="List your ride &amp; start earning ₹50-100/hr"
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -86,28 +104,38 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/btnCustomer"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:clickable="true"
         android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="24dp"
-        app:cardElevation="2dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/surface"
         app:layout_constraintTop_toBottomOf="@id/btnOwner"
         app:strokeColor="@color/card_outline"
         app:strokeWidth="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="24dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🔍"
-                android:textSize="48sp" />
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/primary_light">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="🔍"
+                    android:textSize="28sp" />
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,18 +146,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Customer"
-                    android:textColor="@color/primary"
-                    android:textSize="20sp"
+                    android:text="I need a ride"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Browse &amp; rent vehicles on campus"
+                    android:text="Browse nearby vehicles in your hostel area"
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

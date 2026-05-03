@@ -40,9 +40,7 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_owner_dashboard);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) getSupportActionBar().setTitle("My Vehicles");
+        // No toolbar in the new design; header is handled in the layout
 
         db    = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -56,8 +54,8 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         adapter = new VehicleAdapter(this, vehicleList, true);
         recyclerView.setAdapter(adapter);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> startActivity(new Intent(this, AddVehicleActivity.class)));
+        View fabView = findViewById(R.id.fab);
+        fabView.setOnClickListener(v -> startActivity(new Intent(this, AddVehicleActivity.class)));
     }
 
     @Override

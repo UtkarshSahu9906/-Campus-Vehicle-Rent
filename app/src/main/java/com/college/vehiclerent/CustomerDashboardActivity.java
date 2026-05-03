@@ -50,9 +50,7 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_dashboard);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) getSupportActionBar().setTitle("Rent a Vehicle");
+        // Custom header in layout - no toolbar needed
 
         db    = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();

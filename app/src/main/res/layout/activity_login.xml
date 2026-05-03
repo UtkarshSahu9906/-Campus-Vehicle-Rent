@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Decorative Top Gradient Background -->
+    <!-- Subtle Gradient Glow -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:background="@drawable/bg_login_top"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,39 +21,58 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginBottom="24dp"/>
+        <!-- App Icon -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/surface">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:src="@mipmap/ic_launcher" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome Back"
+            android:text="Campus Ride"
             android:textColor="@color/text_primary"
-            android:textSize="32sp"
+            android:textSize="36sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Your campus journey starts here"
-            android:textColor="@color/text_secondary"
-            android:textSize="16sp" />
+            android:text="Ride. Earn. Connect."
+            android:textColor="@color/primary"
+            android:textSize="16sp"
+            android:letterSpacing="0.15" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Hyper-local vehicle sharing for your campus"
+            android:textColor="@color/text_muted"
+            android:textSize="13sp" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="64dp" />
+            android:layout_height="48dp" />
 
-        <!-- Premium Sign In Button -->
+        <!-- Sign In Button -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnGoogleSignIn"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            app:cardCornerRadius="28dp"
-            app:cardElevation="2dp"
+            android:layout_height="60dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/surface"
             app:strokeColor="@color/card_outline"
             app:strokeWidth="1dp"
             android:clickable="true"
@@ -65,7 +84,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="horizontal">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
