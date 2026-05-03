@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Core Brand Colors -->
-    <color name="primary">#6366F1</color>
-    <color name="primary_light">#EEF2FF</color>
-    <color name="primary_dark">#4338CA</color>
-    <color name="accent">#84CC16</color>
+    <!-- Premium Midnight Theme -->
+    <color name="primary">#818CF8</color> <!-- Lighter Indigo for dark mode -->
+    <color name="primary_light">#1E1B4B</color>
+    <color name="primary_dark">#312E81</color>
+    <color name="accent">#A3E635</color> <!-- Vibrant Lime -->
     
-    <!-- UI Surface Colors -->
-    <color name="background">#FAFAFA</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="card_bg">#FFFFFF</color>
-    <color name="card_outline">#F1F5F9</color>
+    <!-- UI Surface Colors (Midnight) -->
+    <color name="background">#000000</color> <!-- Pure Black -->
+    <color name="surface">#0F172A</color> <!-- Deep Slate -->
+    <color name="card_bg">#1E293B</color> <!-- Dark Slate -->
+    <color name="card_outline">#334155</color>
     
     <!-- Text Colors -->
-    <color name="text_primary">#1E293B</color>
-    <color name="text_secondary">#475569</color>
-    <color name="text_muted">#94A3B8</color>
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#CBD5E1</color>
+    <color name="text_muted">#64748B</color>
     
     <!-- Semantic Colors -->
-    <color name="whatsapp_green">#16A34A</color>
-    <color name="divider">#F1F5F9</color>
+    <color name="whatsapp_green">#22C55E</color>
+    <color name="divider">#1E293B</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     
     <!-- Gradients -->
-    <color name="gradient_start">#6366F1</color>
-    <color name="gradient_end">#A855F7</color>
+    <color name="gradient_start">#818CF8</color>
+    <color name="gradient_end">#C084FC</color>
 </resources>
