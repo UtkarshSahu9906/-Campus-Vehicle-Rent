@@ -78,13 +78,15 @@ public class VehicleDetailActivity extends AppCompatActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
-                intent.setPackage(null);
-                startActivity(intent);
-                Toast.makeText(this, "WhatsApp not installed. Opening in browser.", Toast.LENGTH_SHORT).show();
-            }
+            intent.setPackage(null);
+            startActivity(intent);
+            Toast.makeText(this, "WhatsApp not installed. Opening in browser.", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public boolean onSupportNavigateUp() { finish(); return true; }
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 }
