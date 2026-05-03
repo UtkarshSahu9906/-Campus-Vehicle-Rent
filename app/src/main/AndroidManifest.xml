@@ -49,8 +49,5 @@
         <!-- VEHICLE DETAIL -->
         <activity android:name=".VehicleDetailActivity" android:exported="false" />
 
-        <!-- CHAT -->
-        <activity android:name=".ChatActivity" android:exported="false" />
-
     </application>
 </manifest>

@@ -31,7 +31,6 @@ public class VehicleDetailActivity extends AppCompatActivity {
         double price        = getIntent().getDoubleExtra("pricePerHour", 0);
         String mobile       = getIntent().getStringExtra("mobileNo");
         String ownerName    = getIntent().getStringExtra("ownerName");
-        String ownerUid     = getIntent().getStringExtra("ownerUid");
         String pickupLocation = getIntent().getStringExtra("location");
 
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(vehicleType);
@@ -44,7 +43,6 @@ public class VehicleDetailActivity extends AppCompatActivity {
         TextView      tvMobile    = findViewById(R.id.tvMobile);
         TextView      tvLocation  = findViewById(R.id.tvLocation);
         MaterialButton btnWhatsApp = findViewById(R.id.btnWhatsApp);
-        MaterialButton btnChat     = findViewById(R.id.btnChat);
 
         Glide.with(this)
                 .load(imageUrl)
@@ -61,18 +59,6 @@ public class VehicleDetailActivity extends AppCompatActivity {
 
         // ── WhatsApp deep link ─────────────────────────────────────────────
         btnWhatsApp.setOnClickListener(v -> openWhatsApp(mobile, vehicleType));
-
-        // ── In-app Chat ───────────────────────────────────────────────────
-        btnChat.setOnClickListener(v -> {
-            if (ownerUid != null && ownerUid.equals(com.google.firebase.auth.FirebaseAuth.getInstance().getUid())) {
-                Toast.makeText(this, "This is your listing", Toast.LENGTH_SHORT).show();
-            } else {
-                Intent chatIntent = new Intent(this, ChatActivity.class);
-                chatIntent.putExtra("receiverId", ownerUid);
-                chatIntent.putExtra("receiverName", ownerName);
-                startActivity(chatIntent);
-            }
-        });
     }
 
     private void openWhatsApp(String mobile, String vehicleType) {
@@ -92,12 +78,6 @@ public class VehicleDetailActivity extends AppCompatActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            // Try WhatsApp Business as fallback
-            intent.setPackage("com.whatsapp.w4b");
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-            } else {
-                // Open wa.me link in browser
                 intent.setPackage(null);
                 startActivity(intent);
                 Toast.makeText(this, "WhatsApp not installed. Opening in browser.", Toast.LENGTH_SHORT).show();
