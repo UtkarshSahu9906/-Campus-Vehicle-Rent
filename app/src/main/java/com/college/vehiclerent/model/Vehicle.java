@@ -14,6 +14,8 @@ public class Vehicle {
     private double pricePerHour;
     private String mobileNo;
     private boolean available;
+    private double totalRating;
+    private int ratingCount;
 
     // Required empty constructor for Firestore
     public Vehicle() {}
@@ -31,6 +33,8 @@ public class Vehicle {
         this.pricePerHour = pricePerHour;
         this.mobileNo = mobileNo;
         this.available = true;
+        this.totalRating = 0;
+        this.ratingCount = 0;
     }
 
     @Exclude
@@ -66,4 +70,15 @@ public class Vehicle {
 
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }
+
+    public double getTotalRating() { return totalRating; }
+    public void setTotalRating(double totalRating) { this.totalRating = totalRating; }
+
+    public int getRatingCount() { return ratingCount; }
+    public void setRatingCount(int ratingCount) { this.ratingCount = ratingCount; }
+
+    @Exclude
+    public double getAverageRating() {
+        return ratingCount > 0 ? totalRating / ratingCount : 0;
+    }
 }

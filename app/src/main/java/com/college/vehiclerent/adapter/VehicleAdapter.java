@@ -51,6 +51,13 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         holder.tvCategory.setText(v.getCategory());
         holder.tvSub.setText(isOwnerMode ? v.getDescription() : "by " + v.getOwnerName());
 
+        // Rating display
+        if (v.getRatingCount() > 0) {
+            holder.tvRating.setText(String.format("%.1f", v.getAverageRating()) + " (" + v.getRatingCount() + ")");
+        } else {
+            holder.tvRating.setText("New");
+        }
+
         Glide.with(context)
                 .load(v.getImageUrl())
                 .placeholder(android.R.drawable.ic_menu_gallery)
@@ -69,6 +76,9 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             intent.putExtra("mobileNo",     v.getMobileNo());
             intent.putExtra("ownerName",    v.getOwnerName());
             intent.putExtra("ownerUid",     v.getOwnerUid());
+            intent.putExtra("vehicleId",    v.getId());
+            intent.putExtra("totalRating",  v.getTotalRating());
+            intent.putExtra("ratingCount",  v.getRatingCount());
             context.startActivity(intent);
         });
 
@@ -145,7 +155,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     static class VehicleViewHolder extends RecyclerView.ViewHolder {
         ImageView imgVehicle;
-        TextView  tvType, tvPrice, tvSub, tvLocation, tvCategory;
+        TextView  tvType, tvPrice, tvSub, tvLocation, tvCategory, tvRating;
 
         VehicleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -155,6 +165,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             tvSub      = itemView.findViewById(R.id.tvSub);
             tvLocation = itemView.findViewById(R.id.tvLocation);
             tvCategory = itemView.findViewById(R.id.tvCategory);
+            tvRating   = itemView.findViewById(R.id.tvRating);
         }
     }
 }

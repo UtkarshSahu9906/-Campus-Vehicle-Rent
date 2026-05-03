@@ -56,6 +56,44 @@ public class OwnerDashboardActivity extends AppCompatActivity {
 
         View fabView = findViewById(R.id.fab);
         fabView.setOnClickListener(v -> startActivity(new Intent(this, AddVehicleActivity.class)));
+
+        // Profile icon → switch role / sign out
+        findViewById(R.id.ivOwnerProfile).setOnClickListener(v -> showSwitchDialog());
+    }
+
+    private void showSwitchDialog() {
+        android.app.Dialog dialog = new android.app.Dialog(this);
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_owner_switch);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setLayout(
+                    android.view.WindowManager.LayoutParams.MATCH_PARENT,
+                    android.view.WindowManager.LayoutParams.WRAP_CONTENT);
+            android.view.WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.gravity = android.view.Gravity.BOTTOM;
+            lp.y = 40;
+            dialog.getWindow().setAttributes(lp);
+        }
+
+        dialog.findViewById(R.id.btnDialogPrimary).setOnClickListener(v -> {
+            db.collection("users").document(mAuth.getUid())
+                    .update("role", "customer")
+                    .addOnSuccessListener(unused -> {
+                        startActivity(new Intent(this, CustomerDashboardActivity.class));
+                        finish();
+                    });
+            dialog.dismiss();
+        });
+
+        dialog.findViewById(R.id.btnDialogSecondary).setOnClickListener(v -> {
+            dialog.dismiss();
+            signOut();
+        });
+
+        dialog.findViewById(R.id.btnDialogCancel).setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     @Override
