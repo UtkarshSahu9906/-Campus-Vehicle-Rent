@@ -1,61 +1,31 @@
-# 🚗 Campus Vehicle Rent
+# Campus Vehicle Rent 🏍️🚗
+**Bridging the gap between students who need a ride and students who have one.**
 
-A modern, peer-to-peer vehicle sharing application designed specifically for college campuses. This app allows students and staff to rent out their vehicles (cycles, scooties, bikes) to others within the community.
+Campus Vehicle Rent is a premium, open-source Android application designed to solve student mobility issues within university campuses. It allows students to list their idle vehicles for rent and enables others to find and book them easily.
 
-## 🌟 Key Features
+## 📥 Download APK
+[**Download Latest APK**](https://github.com/UtkarshSahu9906/-Campus-Vehicle-Rent/releases)
 
-- **Google Authentication**: Quick and secure sign-in using campus/personal Google accounts.
-- **Dual Roles**: 
-  - **Owners**: List vehicles, manage availability, set hourly prices, and edit/delete listings.
-  - **Customers**: Browse available vehicles, search by type or owner, and view detailed information.
-- **Real-time Updates**: Powered by Firebase Firestore for instantaneous data synchronization.
-- **Direct Communication**: One-tap WhatsApp integration to connect customers with vehicle owners.
-- **Smart Image Handling**: 
-  - Automated image compression (resizing and quality optimization) to save data and storage.
-  - Efficient image caching using Glide.
-- **Responsive UI**: Built with Material Design for a premium, intuitive user experience.
+## ✨ Features
+*   **Premium UI**: A modern, Myntra-inspired dashboard with smooth transitions and professional aesthetics.
+*   **Smart Search**: Filter vehicles by category (Bike, Car, Scooter, Cycle) or search by specific location/model.
+*   **Easy Listing**: Owners can list vehicles in under 60 seconds with GPS-based location fetching.
+*   **WhatsApp Integration**: Direct one-click contact with owners for quick booking.
+*   **Real-time Data**: Powered by Firebase Firestore for live availability updates.
 
 ## 🛠️ Tech Stack
+*   **Language**: Java
+*   **Database**: Firebase Firestore & Authentication
+*   **Images**: Cloudinary API
+*   **Design**: Material Design 3, Google Fonts (Outfit)
 
-- **Platform**: Android (Java)
-- **Database**: Firebase Firestore (Real-time NoSQL)
-- **Authentication**: Firebase Auth (Google Sign-In)
-- **Storage**: Firebase Cloud Storage
-- **Image Processing**: Glide, Bitmap Compression
-- **UI Components**: Material Design, CircleImageView, RecyclerView
+## 🤝 How to Contribute
+We love contributions! Whether you are a developer, designer, or tester, you can help:
+1.  **Fork** the repository.
+2.  Create your **Feature Branch** (`git checkout -b feature/AmazingFeature`).
+3.  **Commit** your changes (`git commit -m 'Add some AmazingFeature'`).
+4.  **Push** to the branch (`git push origin feature/AmazingFeature`).
+5.  Open a **Pull Request**.
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Android Studio Iguana or newer.
-- A Firebase Project.
-
-### Installation
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/UtkarshSahu9906/-Campus-Vehicle-Rent.git
-   ```
-2. **Firebase Setup**:
-   - Create a project on the [Firebase Console](https://console.firebase.google.com/).
-   - Add an Android app with package name `com.college.vehiclerent`.
-   - Download `google-services.json` and place it in the `app/` directory.
-   - Enable **Google Sign-In**, **Firestore**, and **Storage**.
-3. **Configure Strings**:
-   - Update `YOUR_WEB_CLIENT_ID_HERE` in `app/src/main/res/values/strings.xml` with your Firebase Web Client ID.
-4. **Build and Run**:
-   - Open the project in Android Studio and click **Run**.
-
-## 📂 Project Structure
-```text
-com.college.vehiclerent
-├── adapter             # RecyclerView adapters
-├── model               # Data models (Vehicle, User)
-├── LoginActivity       # Entry point & Authentication
-├── RoleSelection       # New user onboarding
-├── OwnerDashboard      # Management for vehicle owners
-├── CustomerDashboard   # Browsing for renters
-└── AddVehicleActivity  # Listing creation & Image handling
-```
-
----
-Developed with ❤️ for the campus community.
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
