@@ -92,22 +92,38 @@ public class CustomerDashboardActivity extends AppCompatActivity {
     }
 
     private void showRoleSwitchDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Account")
-                .setMessage("Do you want to switch to Owner Mode to list your vehicles?")
-                .setPositiveButton("Switch to Owner", (dialog, which) -> {
-                    db.collection("users").document(mAuth.getUid())
-                            .update("role", "owner")
-                            .addOnSuccessListener(v -> {
-                                startActivity(new Intent(this, OwnerDashboardActivity.class));
-                                finish();
-                            });
-                })
-                .setNegativeButton("Cancel", null)
-                .setNeutralButton("Sign Out", (dialog, which) -> {
-                    signOut();
-                })
-                .show();
+        android.app.Dialog dialog = new android.app.Dialog(this);
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_switch_role);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setLayout(
+                android.view.WindowManager.LayoutParams.MATCH_PARENT,
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT);
+            android.view.WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.gravity = android.view.Gravity.BOTTOM;
+            lp.y = 40;
+            dialog.getWindow().setAttributes(lp);
+        }
+
+        dialog.findViewById(R.id.btnDialogPrimary).setOnClickListener(v -> {
+            db.collection("users").document(mAuth.getUid())
+                    .update("role", "owner")
+                    .addOnSuccessListener(unused -> {
+                        startActivity(new Intent(this, OwnerDashboardActivity.class));
+                        finish();
+                    });
+            dialog.dismiss();
+        });
+
+        dialog.findViewById(R.id.btnDialogSecondary).setOnClickListener(v -> {
+            dialog.dismiss();
+            signOut();
+        });
+
+        dialog.findViewById(R.id.btnDialogCancel).setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     private void signOut() {

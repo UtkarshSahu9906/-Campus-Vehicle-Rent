@@ -109,19 +109,36 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
     }
 
     private void confirmDelete(Vehicle v) {
-        new AlertDialog.Builder(context)
-                .setTitle("Delete Listing")
-                .setMessage("Remove \"" + v.getVehicleType() + "\" from the app?")
-                .setPositiveButton("Delete", (d, w) -> {
-                    FirebaseFirestore.getInstance()
-                            .collection("vehicles")
-                            .document(v.getId())
-                            .delete()
-                            .addOnSuccessListener(a -> Toast.makeText(context, "Deleted!", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(e -> Toast.makeText(context, "Delete failed", Toast.LENGTH_SHORT).show());
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        android.app.Dialog dialog = new android.app.Dialog(context);
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_delete_confirm);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.getWindow().setLayout(
+                android.view.WindowManager.LayoutParams.MATCH_PARENT,
+                android.view.WindowManager.LayoutParams.WRAP_CONTENT);
+            android.view.WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+            lp.gravity = android.view.Gravity.BOTTOM;
+            lp.y = 40;
+            dialog.getWindow().setAttributes(lp);
+        }
+
+        ((android.widget.TextView) dialog.findViewById(R.id.dialogMessage))
+                .setText("Remove \"" + v.getVehicleType() + "\" from your listings? This can't be undone.");
+
+        dialog.findViewById(R.id.btnDialogDelete).setOnClickListener(btn -> {
+            FirebaseFirestore.getInstance()
+                    .collection("vehicles")
+                    .document(v.getId())
+                    .delete()
+                    .addOnSuccessListener(a -> Toast.makeText(context, "Deleted!", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Delete failed", Toast.LENGTH_SHORT).show());
+            dialog.dismiss();
+        });
+
+        dialog.findViewById(R.id.btnDialogCancel).setOnClickListener(btn -> dialog.dismiss());
+
+        dialog.show();
     }
 
     // ── ViewHolder ─────────────────────────────────────────────────────────────
