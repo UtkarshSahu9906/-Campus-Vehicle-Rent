@@ -83,12 +83,38 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         });
 
         // Header Buttons
-        findViewById(R.id.ivProfile).setOnClickListener(v -> showRoleSwitchDialog());
+        findViewById(R.id.ivProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
 
         // Bottom Nav
         findViewById(R.id.navExplore).setOnClickListener(v -> showToast("Already on Explore"));
-        findViewById(R.id.navOrders).setOnClickListener(v -> showToast("No active bookings"));
+        findViewById(R.id.navOrders).setOnClickListener(v -> showToast("Orders coming soon"));
         findViewById(R.id.navSwitchRole).setOnClickListener(v -> showRoleSwitchDialog());
+
+        checkActiveSessions();
+    }
+
+    private void checkActiveSessions() {
+        String uid = mAuth.getUid();
+        if (uid == null) return;
+
+        db.collection("rental_sessions")
+                .whereEqualTo("customerId", uid)
+                .whereIn("status", java.util.Arrays.asList("pending", "active", "returning"))
+                .addSnapshotListener((value, error) -> {
+                    if (error != null || value == null || value.isEmpty()) {
+                        findViewById(R.id.btnActiveRide).setVisibility(View.GONE);
+                        return;
+                    }
+
+                    com.google.firebase.firestore.DocumentSnapshot doc = value.getDocuments().get(0);
+                    findViewById(R.id.btnActiveRide).setVisibility(View.VISIBLE);
+                    findViewById(R.id.btnActiveRide).setOnClickListener(v -> {
+                        Intent intent = new Intent(this, ActiveRentalActivity.class);
+                        intent.putExtra("sessionId", doc.getId());
+                        intent.putExtra("userRole", "customer");
+                        startActivity(intent);
+                    });
+                });
     }
 
     private void showRoleSwitchDialog() {

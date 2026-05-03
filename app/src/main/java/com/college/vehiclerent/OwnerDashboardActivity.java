@@ -57,8 +57,34 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         View fabView = findViewById(R.id.fab);
         fabView.setOnClickListener(v -> startActivity(new Intent(this, AddVehicleActivity.class)));
 
-        // Profile icon → switch role / sign out
-        findViewById(R.id.ivOwnerProfile).setOnClickListener(v -> showSwitchDialog());
+        // Profile icon → open profile
+        findViewById(R.id.ivOwnerProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
+
+        checkActiveRentals();
+    }
+
+    private void checkActiveRentals() {
+        String uid = mAuth.getUid();
+        if (uid == null) return;
+
+        db.collection("rental_sessions")
+                .whereEqualTo("ownerId", uid)
+                .whereIn("status", java.util.Arrays.asList("pending", "active", "returning"))
+                .addSnapshotListener((value, error) -> {
+                    if (error != null || value == null || value.isEmpty()) {
+                        findViewById(R.id.btnActiveRental).setVisibility(View.GONE);
+                        return;
+                    }
+
+                    com.google.firebase.firestore.DocumentSnapshot doc = value.getDocuments().get(0);
+                    findViewById(R.id.btnActiveRental).setVisibility(View.VISIBLE);
+                    findViewById(R.id.btnActiveRental).setOnClickListener(v -> {
+                        Intent intent = new Intent(this, ActiveRentalActivity.class);
+                        intent.putExtra("sessionId", doc.getId());
+                        intent.putExtra("userRole", "owner");
+                        startActivity(intent);
+                    });
+                });
     }
 
     private void showSwitchDialog() {

@@ -49,5 +49,11 @@
         <!-- VEHICLE DETAIL -->
         <activity android:name=".VehicleDetailActivity" android:exported="false" />
 
+        <!-- ACTIVE RENTAL -->
+        <activity android:name=".ActiveRentalActivity" android:exported="false" />
+
+        <!-- PROFILE -->
+        <activity android:name=".ProfileActivity" android:exported="false" />
+
     </application>
 </manifest>

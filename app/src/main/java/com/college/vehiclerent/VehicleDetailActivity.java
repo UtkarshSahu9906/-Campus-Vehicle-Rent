@@ -110,8 +110,50 @@ public class VehicleDetailActivity extends AppCompatActivity {
                     );
         });
 
+        // Unpack owner info
+        String ownerUid = getIntent().getStringExtra("ownerUid");
+        String currentUid = FirebaseAuth.getInstance().getUid();
+
         // WhatsApp deep link
         btnWhatsApp.setOnClickListener(v -> openWhatsApp(mobile, vehicleType));
+
+        // If owner is viewing their own vehicle, change "Contact" to "Release Vehicle"
+        if (currentUid != null && currentUid.equals(ownerUid)) {
+            btnWhatsApp.setText("Release Vehicle");
+            btnWhatsApp.setIconResource(android.R.drawable.ic_menu_send);
+            btnWhatsApp.setOnClickListener(v -> startRentalSession(ownerUid, ownerName, vehicleType, price));
+            
+            // Hide rating section for owner
+            findViewById(R.id.ratingBar).setVisibility(View.GONE);
+            findViewById(R.id.btnSubmitRating).setVisibility(View.GONE);
+        }
+    }
+
+    private void startRentalSession(String ownerUid, String ownerName, String vehicleType, double price) {
+        String currentUid = FirebaseAuth.getInstance().getUid();
+        String currentName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        if (currentName == null) currentName = "Student";
+
+        com.college.vehiclerent.model.RentalSession newSession = new com.college.vehiclerent.model.RentalSession(
+                vehicleId, vehicleType,
+                ownerUid, ownerName,
+                "WAITING", "Student", // Updated when customer confirms
+                price
+        );
+
+        FirebaseFirestore.getInstance().collection("rental_sessions")
+                .add(newSession)
+                .addOnSuccessListener(docRef -> {
+                    // Update vehicle availability
+                    FirebaseFirestore.getInstance().collection("vehicles").document(vehicleId)
+                            .update("available", false);
+
+                    Intent intent = new Intent(this, ActiveRentalActivity.class);
+                    intent.putExtra("sessionId", docRef.getId());
+                    intent.putExtra("userRole", "owner");
+                    startActivity(intent);
+                    finish();
+                });
     }
 
     private void openWhatsApp(String mobile, String vehicleType) {
