@@ -1,17 +1,20 @@
-# Campus Vehicle Rent 🏍️🚗
-**Bridging the gap between students who need a ride and students who have one.**
+# Campus Ride - Hyper-Local Vehicle Sharing 🏍️🚗
+**Solving mobility for 800+ hostellers through peer-to-peer sharing.**
 
-Campus Vehicle Rent is a premium, open-source Android application designed to solve student mobility issues within university campuses. It allows students to list their idle vehicles for rent and enables others to find and book them easily.
+Campus Ride is a premium, hyper-local Android application designed for university campuses. It establishes a direct connection between student vehicle owners and those in need of a ride, specifically optimized for search results within a 500-meter radius.
 
 ## 📥 Download APK
 [**Download Latest APK**](https://github.com/UtkarshSahu9906/-Campus-Vehicle-Rent/releases)
 
-## ✨ Features
-*   **Premium UI**: A modern, Myntra-inspired dashboard with smooth transitions and professional aesthetics.
-*   **Smart Search**: Filter vehicles by category (Bike, Car, Scooter, Cycle) or search by specific location/model.
+## 🎯 Our Mission
+Our goal is to solve the "last mile" travel problem for hostellers. By enabling owners to rent out their idle vehicles for a fair price (₹50-₹100/hr), we create a win-win ecosystem where owners earn and students travel with ease. We believe that every student should have access to mobility without the burden of ownership.
+
+## ✨ Key Features
+*   **Hyper-Local Discovery**: Algorithms prioritize showing vehicles closest to your current hostel (within 500m).
+*   **Dynamic Pricing**: Owners set their own hourly rates based on vehicle type.
+*   **Premium UI**: A modern, Myntra-inspired dashboard designed for speed and clarity.
+*   **One-Click Booking**: Integrated WhatsApp redirection for instant communication.
 *   **Easy Listing**: Owners can list vehicles in under 60 seconds with GPS-based location fetching.
-*   **WhatsApp Integration**: Direct one-click contact with owners for quick booking.
-*   **Real-time Data**: Powered by Firebase Firestore for live availability updates.
 
 ## 🛠️ Tech Stack
 *   **Language**: Java
@@ -20,7 +23,7 @@ Campus Vehicle Rent is a premium, open-source Android application designed to so
 *   **Design**: Material Design 3, Google Fonts (Outfit)
 
 ## 🤝 How to Contribute
-We love contributions! Whether you are a developer, designer, or tester, you can help:
+We love contributions from fellow students! Whether you are a developer, designer, or tester, you can help:
 1.  **Fork** the repository.
 2.  Create your **Feature Branch** (`git checkout -b feature/AmazingFeature`).
 3.  **Commit** your changes (`git commit -m 'Add some AmazingFeature'`).
