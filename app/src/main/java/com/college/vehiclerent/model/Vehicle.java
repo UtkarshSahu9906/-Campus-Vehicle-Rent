@@ -12,8 +12,10 @@ public class Vehicle {
     private String description;
     private String imageUrl;
     private double pricePerHour;
+    private double pricePerDay;
     private String mobileNo;
     private boolean available;
+    private boolean visible;
     private double totalRating;
     private int ratingCount;
 
@@ -22,7 +24,7 @@ public class Vehicle {
 
     public Vehicle(String ownerUid, String ownerName, String vehicleType, String category,
                    String location, String description, String imageUrl,
-                   double pricePerHour, String mobileNo) {
+                   double pricePerHour, double pricePerDay, String mobileNo) {
         this.ownerUid = ownerUid;
         this.ownerName = ownerName;
         this.vehicleType = vehicleType;
@@ -31,8 +33,10 @@ public class Vehicle {
         this.description = description;
         this.imageUrl = imageUrl;
         this.pricePerHour = pricePerHour;
+        this.pricePerDay = pricePerDay;
         this.mobileNo = mobileNo;
         this.available = true;
+        this.visible = true;
         this.totalRating = 0;
         this.ratingCount = 0;
     }
@@ -65,11 +69,17 @@ public class Vehicle {
     public double getPricePerHour() { return pricePerHour; }
     public void setPricePerHour(double pricePerHour) { this.pricePerHour = pricePerHour; }
 
+    public double getPricePerDay() { return pricePerDay; }
+    public void setPricePerDay(double pricePerDay) { this.pricePerDay = pricePerDay; }
+
     public String getMobileNo() { return mobileNo; }
     public void setMobileNo(String mobileNo) { this.mobileNo = mobileNo; }
 
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }
+
+    public boolean isVisible() { return visible; }
+    public void setVisible(boolean visible) { this.visible = visible; }
 
     public double getTotalRating() { return totalRating; }
     public void setTotalRating(double totalRating) { this.totalRating = totalRating; }

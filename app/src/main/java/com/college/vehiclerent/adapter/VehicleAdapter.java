@@ -58,6 +58,18 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             holder.tvRating.setText("New");
         }
 
+        // Status Badge Logic
+        if (!v.isAvailable()) {
+            holder.tvStatusBadge.setText("Renting");
+            holder.tvStatusBadge.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+        } else if (!v.isVisible()) {
+            holder.tvStatusBadge.setText("Invisible");
+            holder.tvStatusBadge.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
+        } else {
+            holder.tvStatusBadge.setText("Available");
+            holder.tvStatusBadge.setTextColor(context.getResources().getColor(R.color.primary));
+        }
+
         Glide.with(context)
                 .load(v.getImageUrl())
                 .placeholder(android.R.drawable.ic_menu_gallery)
@@ -82,21 +94,53 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             context.startActivity(intent);
         });
 
-        // ── Owner mode: long-press shows Edit / Delete dialog ──────────────
+        // ── Owner Mode UI ──────────────
         if (isOwnerMode) {
-            holder.itemView.setOnLongClickListener(view -> {
-                new AlertDialog.Builder(context)
-                        .setTitle(v.getVehicleType())
-                        .setItems(new String[]{"Edit", "Delete"}, (dialog, which) -> {
-                            if (which == 0) {
-                                editVehicle(v);
-                            } else {
-                                confirmDelete(v);
-                            }
-                        })
-                        .show();
-                return true;
+            holder.layoutOwnerControls.setVisibility(View.VISIBLE);
+            holder.btnToggleVisibility.setText(v.isVisible() ? "Hide" : "Show");
+
+            // Fetch Vehicle Earnings
+            FirebaseFirestore.getInstance().collection("rental_sessions")
+                    .whereEqualTo("vehicleId", v.getId())
+                    .whereEqualTo("status", "completed")
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        double earnings = 0;
+                        for (com.google.firebase.firestore.QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Double cost = doc.getDouble("totalCost");
+                            if (cost != null) earnings += cost;
+                        }
+                        holder.tvVehicleEarnings.setText(String.format("₹%.0f", earnings));
+                    });
+
+            holder.btnToggleVisibility.setOnClickListener(view -> {
+                boolean newVisibility = !v.isVisible();
+                FirebaseFirestore.getInstance().collection("vehicles").document(v.getId())
+                        .update("visible", newVisibility)
+                        .addOnSuccessListener(a -> {
+                            v.setVisible(newVisibility);
+                            notifyItemChanged(position);
+                            Toast.makeText(context, newVisibility ? "Vehicle visible to customers" : "Vehicle hidden from customers", Toast.LENGTH_SHORT).show();
+                        });
             });
+
+            holder.btnEditVehicle.setOnClickListener(view -> {
+                if (!v.isAvailable()) {
+                    Toast.makeText(context, "Cannot edit while vehicle is renting", Toast.LENGTH_SHORT).show();
+                } else {
+                    editVehicle(v);
+                }
+            });
+
+            holder.btnDeleteVehicle.setOnClickListener(view -> {
+                if (!v.isAvailable()) {
+                    Toast.makeText(context, "Cannot delete while vehicle is renting", Toast.LENGTH_SHORT).show();
+                } else {
+                    confirmDelete(v);
+                }
+            });
+        } else {
+            holder.layoutOwnerControls.setVisibility(View.GONE);
         }
     }
 
@@ -114,6 +158,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
         intent.putExtra("description",  v.getDescription());
         intent.putExtra("imageUrl",     v.getImageUrl());
         intent.putExtra("pricePerHour", v.getPricePerHour());
+        intent.putExtra("pricePerDay",  v.getPricePerDay());
         intent.putExtra("mobileNo",     v.getMobileNo());
         context.startActivity(intent);
     }
@@ -155,7 +200,9 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     static class VehicleViewHolder extends RecyclerView.ViewHolder {
         ImageView imgVehicle;
-        TextView  tvType, tvPrice, tvSub, tvLocation, tvCategory, tvRating;
+        TextView  tvType, tvPrice, tvSub, tvLocation, tvCategory, tvRating, tvStatusBadge, tvVehicleEarnings;
+        View layoutOwnerControls;
+        com.google.android.material.button.MaterialButton btnToggleVisibility, btnEditVehicle, btnDeleteVehicle;
 
         VehicleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -166,6 +213,12 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
             tvLocation = itemView.findViewById(R.id.tvLocation);
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvRating   = itemView.findViewById(R.id.tvRating);
+            tvStatusBadge = itemView.findViewById(R.id.tvStatusBadge);
+            layoutOwnerControls = itemView.findViewById(R.id.layoutOwnerControls);
+            tvVehicleEarnings = itemView.findViewById(R.id.tvVehicleEarnings);
+            btnToggleVisibility = itemView.findViewById(R.id.btnToggleVisibility);
+            btnEditVehicle = itemView.findViewById(R.id.btnEditVehicle);
+            btnDeleteVehicle = itemView.findViewById(R.id.btnDeleteVehicle);
         }
     }
 }

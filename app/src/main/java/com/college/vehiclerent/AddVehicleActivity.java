@@ -47,7 +47,7 @@ public class AddVehicleActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST  = 200;
 
     private ImageView imgVehicle;
-    private EditText  etVehicleType, etDescription, etPrice, etMobile, etLocation;
+    private EditText  etVehicleType, etDescription, etPrice, etPriceDay, etMobile, etLocation;
     private AutoCompleteTextView spinnerCategory;
     private Button    btnSave, btnGetCurrentLocation;
     private ProgressBar progressBar;
@@ -82,6 +82,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         etLocation    = findViewById(R.id.etLocation);
         etDescription = findViewById(R.id.etDescription);
         etPrice       = findViewById(R.id.etPrice);
+        etPriceDay    = findViewById(R.id.etPriceDay);
         etMobile      = findViewById(R.id.etMobile);
         btnSave       = findViewById(R.id.btnSave);
         btnGetCurrentLocation = findViewById(R.id.btnGetCurrentLocation);
@@ -98,6 +99,9 @@ public class AddVehicleActivity extends AppCompatActivity {
             etLocation.setText(intent.getStringExtra("location"));
             etDescription.setText(intent.getStringExtra("description"));
             etPrice.setText(String.valueOf(intent.getDoubleExtra("pricePerHour", 0)));
+            if (intent.hasExtra("pricePerDay")) {
+                etPriceDay.setText(String.valueOf(intent.getDoubleExtra("pricePerDay", 0)));
+            }
             etMobile.setText(intent.getStringExtra("mobileNo"));
             getSupportActionBar().setTitle("Edit Vehicle");
             btnSave.setText("Update Vehicle");
@@ -196,6 +200,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         String location = etLocation.getText().toString().trim();
         String desc     = etDescription.getText().toString().trim();
         String price    = etPrice.getText().toString().trim();
+        String priceDayStr = etPriceDay.getText().toString().trim();
         String mobile   = etMobile.getText().toString().trim();
 
         if (type.isEmpty()) { etVehicleType.setError("Enter vehicle model"); return; }
@@ -211,16 +216,19 @@ public class AddVehicleActivity extends AppCompatActivity {
 
         setLoading(true);
 
+        double hourlyPrice = Double.parseDouble(price);
+        double dailyPrice = priceDayStr.isEmpty() ? hourlyPrice * 24 : Double.parseDouble(priceDayStr);
+
         if (imageUri != null) {
-            uploadImageThenSave(type, category, location, desc, Double.parseDouble(price), mobile);
+            uploadImageThenSave(type, category, location, desc, hourlyPrice, dailyPrice, mobile);
         } else {
             // Editing without changing the image — keep old URL
             String oldUrl = getIntent().getStringExtra("imageUrl");
-            saveToFirestore(type, category, location, desc, Double.parseDouble(price), mobile, oldUrl);
+            saveToFirestore(type, category, location, desc, hourlyPrice, dailyPrice, mobile, oldUrl);
         }
     }
 
-    private void uploadImageThenSave(String type, String category, String location, String desc, double price, String mobile) {
+    private void uploadImageThenSave(String type, String category, String location, String desc, double price, double pricePerDay, String mobile) {
         byte[] data = getCompressedImageData(imageUri);
         if (data == null) {
             onSaveFail("Failed to process image");
@@ -238,7 +246,7 @@ public class AddVehicleActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String requestId, Map resultData) {
                         String imageUrl = (String) resultData.get("secure_url");
-                        saveToFirestore(type, category, location, desc, price, mobile, imageUrl);
+                        saveToFirestore(type, category, location, desc, price, pricePerDay, mobile, imageUrl);
                     }
                     @Override
                     public void onError(String requestId, ErrorInfo error) {
@@ -284,7 +292,7 @@ public class AddVehicleActivity extends AppCompatActivity {
         return inSampleSize;
     }
 
-    private void saveToFirestore(String type, String category, String location, String desc, double price, String mobile, String imageUrl) {
+    private void saveToFirestore(String type, String category, String location, String desc, double price, double pricePerDay, String mobile, String imageUrl) {
         String uid  = mAuth.getCurrentUser().getUid();
         String name = mAuth.getCurrentUser().getDisplayName();
 
@@ -296,13 +304,14 @@ public class AddVehicleActivity extends AppCompatActivity {
                             "location", location,
                             "description", desc,
                             "pricePerHour", price,
+                            "pricePerDay", pricePerDay,
                             "mobileNo", mobile,
                             "imageUrl", imageUrl)
                     .addOnSuccessListener(v -> onSaveSuccess("Vehicle updated!"))
                     .addOnFailureListener(e -> onSaveFail("Update failed: " + e.getMessage()));
         } else {
             // ADD new document
-            Vehicle vehicle = new Vehicle(uid, name, type, category, location, desc, imageUrl, price, mobile);
+            Vehicle vehicle = new Vehicle(uid, name, type, category, location, desc, imageUrl, price, pricePerDay, mobile);
             db.collection("vehicles").add(vehicle)
                     .addOnSuccessListener(ref -> onSaveSuccess("Vehicle listed!"))
                     .addOnFailureListener(e -> onSaveFail("Failed to save: " + e.getMessage()));

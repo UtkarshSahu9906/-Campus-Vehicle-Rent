@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".VehicleRentApplication"
@@ -54,6 +55,12 @@
 
         <!-- PROFILE -->
         <activity android:name=".ProfileActivity" android:exported="false" />
+
+        <!-- RENTAL CONFIRMATION -->
+        <activity android:name=".RentalConfirmationActivity" android:exported="false" />
+
+        <!-- CUSTOMER BOOKINGS -->
+        <activity android:name=".CustomerBookingsActivity" android:exported="false" />
 
     </application>
 </manifest>

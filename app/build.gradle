@@ -51,6 +51,13 @@ dependencies {
     // Circle image view for profile pics
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    // Nearby Connections for proximity handshake
+    implementation 'com.google.android.gms:play-services-nearby:19.0.0'
+
     // Cloudinary for image management
     implementation 'com.cloudinary:cloudinary-android:3.0.2'
+
+    // ZXing for QR Code generation and scanning
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation 'com.google.zxing:core:3.5.3'
 }

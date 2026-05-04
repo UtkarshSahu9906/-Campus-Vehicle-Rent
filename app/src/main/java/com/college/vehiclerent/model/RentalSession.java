@@ -13,6 +13,7 @@ public class RentalSession {
     private String customerId;
     private String customerName;
     private double pricePerHour;
+    private double pricePerDay;
     private long startTime;    // millis
     private long endTime;      // millis
     private double totalCost;
@@ -24,7 +25,7 @@ public class RentalSession {
     public RentalSession(String vehicleId, String vehicleType,
                          String ownerId, String ownerName,
                          String customerId, String customerName,
-                         double pricePerHour) {
+                         double pricePerHour, double pricePerDay) {
         this.vehicleId = vehicleId;
         this.vehicleType = vehicleType;
         this.ownerId = ownerId;
@@ -32,6 +33,7 @@ public class RentalSession {
         this.customerId = customerId;
         this.customerName = customerName;
         this.pricePerHour = pricePerHour;
+        this.pricePerDay = pricePerDay;
         this.status = "pending";
         this.startTime = 0;
         this.endTime = 0;
@@ -63,6 +65,9 @@ public class RentalSession {
 
     public double getPricePerHour() { return pricePerHour; }
     public void setPricePerHour(double pricePerHour) { this.pricePerHour = pricePerHour; }
+
+    public double getPricePerDay() { return pricePerDay; }
+    public void setPricePerDay(double pricePerDay) { this.pricePerDay = pricePerDay; }
 
     public long getStartTime() { return startTime; }
     public void setStartTime(long startTime) { this.startTime = startTime; }

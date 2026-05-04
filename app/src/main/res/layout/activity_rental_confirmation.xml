@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/background"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@android:drawable/ic_dialog_info"
+        app:tint="@color/primary"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm Rental"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The owner has scanned your QR. Please confirm the details to start the ride."
+        android:textAlignment="center"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="32dp"/>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        android:layout_marginBottom="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tvVehicleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vehicle Name"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/tvOwnerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Owner: Name"
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rate: ₹10/hr | ₹200/day"
+                android:textSize="16sp"
+                android:textColor="@color/primary"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="Confirm &amp; Start Ride"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:cornerRadius="20dp"
+        android:layout_marginBottom="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDecline"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="Decline"
+        android:textSize="18sp"
+        android:textColor="#EF4444"
+        app:strokeColor="#EF4444"
+        app:cornerRadius="20dp"/>
+
+</LinearLayout>

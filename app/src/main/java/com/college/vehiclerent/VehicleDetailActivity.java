@@ -17,6 +17,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class VehicleDetailActivity extends AppCompatActivity {
 
@@ -121,38 +123,51 @@ public class VehicleDetailActivity extends AppCompatActivity {
         // If owner is viewing their own vehicle, change "Contact" to "Release Vehicle"
         if (currentUid != null && currentUid.equals(ownerUid)) {
             btnWhatsApp.setText("Release Vehicle");
-            btnWhatsApp.setIconResource(android.R.drawable.ic_menu_send);
-            btnWhatsApp.setOnClickListener(v -> startRentalSession(ownerUid, ownerName, vehicleType, price));
+            btnWhatsApp.setIconResource(android.R.drawable.ic_menu_camera);
+            btnWhatsApp.setOnClickListener(v -> scanCustomerQR());
             
             // Hide rating section for owner
-            findViewById(R.id.ratingBar).setVisibility(View.GONE);
+            findViewById(R.id.ratingBar).setVisibility( View.GONE);
             findViewById(R.id.btnSubmitRating).setVisibility(View.GONE);
         }
     }
 
-    private void startRentalSession(String ownerUid, String ownerName, String vehicleType, double price) {
-        String currentUid = FirebaseAuth.getInstance().getUid();
-        String currentName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        if (currentName == null) currentName = "Student";
+    private void scanCustomerQR() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setPrompt("Scan Customer's Profile QR Code");
+        integrator.setBeepEnabled(true);
+        integrator.setOrientationLocked(false);
+        integrator.initiateScan();
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                String customerUid = result.getContents();
+                startRentalSession(getIntent().getStringExtra("ownerUid"), getIntent().getStringExtra("ownerName"), getIntent().getStringExtra("vehicleType"), getIntent().getDoubleExtra("pricePerHour", 0), getIntent().getDoubleExtra("pricePerDay", 0), customerUid);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void startRentalSession(String ownerUid, String ownerName, String vehicleType, double price, double pricePerDay, String customerUid) {
+        // Fetch customer name first, or just use a placeholder until they confirm
         com.college.vehiclerent.model.RentalSession newSession = new com.college.vehiclerent.model.RentalSession(
                 vehicleId, vehicleType,
                 ownerUid, ownerName,
-                "WAITING", "Student", // Updated when customer confirms
-                price
+                customerUid, "Customer", // This will be updated when customer confirms
+                price, pricePerDay
         );
 
         FirebaseFirestore.getInstance().collection("rental_sessions")
                 .add(newSession)
                 .addOnSuccessListener(docRef -> {
-                    // Update vehicle availability
-                    FirebaseFirestore.getInstance().collection("vehicles").document(vehicleId)
-                            .update("available", false);
-
-                    Intent intent = new Intent(this, ActiveRentalActivity.class);
-                    intent.putExtra("sessionId", docRef.getId());
-                    intent.putExtra("userRole", "owner");
-                    startActivity(intent);
+                    Toast.makeText(this, "Rental session created. Waiting for customer confirmation.", Toast.LENGTH_LONG).show();
                     finish();
                 });
     }

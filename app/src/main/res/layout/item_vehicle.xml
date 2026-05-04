@@ -44,6 +44,20 @@
                 android:textStyle="bold"
                 android:textSize="11sp" />
 
+            <!-- Status Badge -->
+            <TextView
+                android:id="@+id/tvStatusBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="12dp"
+                android:background="@drawable/bg_tag_light"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="Available"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:textSize="11sp" />
         </FrameLayout>
 
         <!-- Info -->
@@ -139,6 +153,91 @@
                     android:layout_marginStart="4dp"
                     android:textColor="@color/text_muted"
                     android:textSize="12sp" />
+            </LinearLayout>
+
+            <!-- Owner Controls -->
+            <LinearLayout
+                android:id="@+id/layoutOwnerControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/card_outline"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Vehicle Earnings:"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvVehicleEarnings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹0"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnToggleVisibility"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:text="Hide"
+                        android:textColor="@color/primary"
+                        app:strokeColor="@color/primary"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEditVehicle"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="2dp"
+                        android:text="Edit"
+                        android:textColor="@color/primary"
+                        app:strokeColor="@color/primary"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDeleteVehicle"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:text="Delete"
+                        android:textColor="#EF4444"
+                        app:strokeColor="#EF4444"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_revert"
+            app:tint="@color/text_primary" />
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Nearby Connection"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Searching for nearby students..."
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Radar Animation / Searching State -->
+    <FrameLayout
+        android:id="@+id/searchingContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/rvNearby"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header">
+
+        <!-- Outer Glow -->
+        <View
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:background="@drawable/bg_circle_glow" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivMyProfile"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher"
+            app:civ_border_color="@color/primary"
+            app:civ_border_width="2dp" />
+    </FrameLayout>
+
+    <!-- Nearby List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNearby"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchingContainer" />
+
+    <!-- Confirmation Overlay (Hidden by default) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/confirmationCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:visibility="gone"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        app:cardBackgroundColor="@color/surface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp">
+            <TextView
+                android:id="@+id/tvRequestTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Handover Request"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tvRequestMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Student Name wants to confirm vehicle handover."
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConfirmHandshake"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:text="Confirm Handshake"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                app:cornerRadius="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRejectHandshake"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:text="Cancel"
+                android:textColor="#EF4444"
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,9 +27,9 @@ public class ActiveRentalActivity extends AppCompatActivity {
     private ListenerRegistration listener;
     private RentalSession session;
 
-    private TextView tvStatus, tvVehicleName, tvPartnerInfo, tvTimer, tvCost, tvRate, tvReturnCode, tvWaiting;
+    private TextView tvStatus, tvVehicleName, tvPartnerInfo, tvTimer, tvCost, tvRate, tvWaiting;
     private View returnCodeCard, enterCodeCard;
-    private EditText etReturnCode;
+    private android.widget.ImageView ivReturnQR;
     private MaterialButton btnConfirmPickup, btnReturnVehicle, btnVerifyCode;
 
     private Handler timerHandler = new Handler();
@@ -57,12 +57,11 @@ public class ActiveRentalActivity extends AppCompatActivity {
         tvTimer = findViewById(R.id.tvTimer);
         tvCost = findViewById(R.id.tvCost);
         tvRate = findViewById(R.id.tvRate);
-        tvReturnCode = findViewById(R.id.tvReturnCode);
         tvWaiting = findViewById(R.id.tvWaiting);
         
         returnCodeCard = findViewById(R.id.returnCodeCard);
         enterCodeCard = findViewById(R.id.enterCodeCard);
-        etReturnCode = findViewById(R.id.etReturnCode);
+        ivReturnQR = findViewById(R.id.ivReturnQR);
 
         btnConfirmPickup = findViewById(R.id.btnConfirmPickup);
         btnReturnVehicle = findViewById(R.id.btnReturnVehicle);
@@ -70,7 +69,7 @@ public class ActiveRentalActivity extends AppCompatActivity {
 
         btnConfirmPickup.setOnClickListener(v -> confirmPickup());
         btnReturnVehicle.setOnClickListener(v -> initiateReturn());
-        btnVerifyCode.setOnClickListener(v -> verifyReturnCode());
+        btnVerifyCode.setOnClickListener(v -> scanReturnQR());
     }
 
     private void startListening() {
@@ -123,7 +122,8 @@ public class ActiveRentalActivity extends AppCompatActivity {
                 calculateFinalCost();
                 if ("customer".equals(userRole)) {
                     returnCodeCard.setVisibility(View.VISIBLE);
-                    tvReturnCode.setText(session.getReturnCode());
+                    android.graphics.Bitmap qr = com.college.vehiclerent.utils.QRUtils.generateQRCode(sessionId, 500, 500);
+                    ivReturnQR.setImageBitmap(qr);
                 } else {
                     enterCodeCard.setVisibility(View.VISIBLE);
                 }
@@ -223,26 +223,45 @@ public class ActiveRentalActivity extends AppCompatActivity {
     }
 
     private void initiateReturn() {
-        String code = String.format("%04d", new Random().nextInt(10000));
         db.collection("rental_sessions").document(sessionId)
-                .update("status", "returning", "returnCode", code, "endTime", System.currentTimeMillis())
-                .addOnSuccessListener(a -> Toast.makeText(this, "Provide code to owner", Toast.LENGTH_SHORT).show());
+                .update("status", "returning", "endTime", System.currentTimeMillis())
+                .addOnSuccessListener(a -> Toast.makeText(this, "Show the QR code to the owner", Toast.LENGTH_SHORT).show());
     }
 
-    private void verifyReturnCode() {
-        String entered = etReturnCode.getText().toString();
-        if (entered.equals(session.getReturnCode())) {
-            calculateFinalCost();
-            db.collection("rental_sessions").document(sessionId)
-                    .update("status", "completed", "totalCost", session.getTotalCost())
-                    .addOnSuccessListener(a -> {
-                        // Mark vehicle as available again
-                        db.collection("vehicles").document(session.getVehicleId())
-                                .update("available", true);
-                    });
+    private void scanReturnQR() {
+        com.google.zxing.integration.android.IntentIntegrator integrator = new com.google.zxing.integration.android.IntentIntegrator(this);
+        integrator.setPrompt("Scan Customer's Return QR Code");
+        integrator.setBeepEnabled(true);
+        integrator.setOrientationLocked(false);
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, android.content.Intent data) {
+        com.google.zxing.integration.android.IntentResult result = com.google.zxing.integration.android.IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() != null) {
+                String scannedSessionId = result.getContents();
+                if (scannedSessionId.equals(sessionId)) {
+                    completeReturn();
+                } else {
+                    Toast.makeText(this, "Invalid QR Code for this session", Toast.LENGTH_SHORT).show();
+                }
+            }
         } else {
-            Toast.makeText(this, "Invalid Code!", Toast.LENGTH_SHORT).show();
+            super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void completeReturn() {
+        calculateFinalCost();
+        db.collection("rental_sessions").document(sessionId)
+                .update("status", "completed", "totalCost", session.getTotalCost())
+                .addOnSuccessListener(a -> {
+                    // Mark vehicle as available again
+                    db.collection("vehicles").document(session.getVehicleId())
+                            .update("available", true);
+                });
     }
 
     private void startTimer() {
@@ -278,9 +297,35 @@ public class ActiveRentalActivity extends AppCompatActivity {
 
     private void calculateFinalCost() {
         long duration = session.getEndTime() - session.getStartTime();
-        double hours = Math.max(1, duration / (1000.0 * 60 * 60)); // Min 1 hour or per minute?
-        // Let's do per minute but show as hourly rate
-        double finalCost = (duration / (1000.0 * 60 * 60)) * session.getPricePerHour();
+        
+        // Duration in hours
+        double hours = duration / (1000.0 * 60 * 60);
+        
+        // Dual pricing logic:
+        double finalCost = 0;
+        double pricePerHour = session.getPricePerHour();
+        double pricePerDay = session.getPricePerDay();
+        
+        // If pricePerDay is set and valid, use the best combination
+        if (pricePerDay > 0) {
+            int days = (int) (hours / 24);
+            double remainingHours = hours % 24;
+            
+            // If remaining hours cost more than a full day, cap it to a full day cost
+            double hoursCost = remainingHours * pricePerHour;
+            if (hoursCost > pricePerDay) {
+                hoursCost = pricePerDay;
+            }
+            finalCost = (days * pricePerDay) + hoursCost;
+        } else {
+            finalCost = hours * pricePerHour;
+        }
+        
+        // Enforce minimum 1 hour cost
+        if (finalCost < pricePerHour) {
+            finalCost = pricePerHour;
+        }
+
         session.setTotalCost(finalCost);
     }
 

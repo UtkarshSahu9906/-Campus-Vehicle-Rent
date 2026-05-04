@@ -34,6 +34,7 @@ public class OwnerDashboardActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private ListenerRegistration listenerReg;
+    private TextView tvTotalEarnedOverall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         vehicleList = new ArrayList<>();
 
         tvEmpty     = findViewById(R.id.tvEmpty);
+        tvTotalEarnedOverall = findViewById(R.id.tvTotalEarnedOverall);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -59,6 +61,12 @@ public class OwnerDashboardActivity extends AppCompatActivity {
 
         // Profile icon → open profile
         findViewById(R.id.ivOwnerProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
+        
+        findViewById(R.id.btnViewHistory).setOnClickListener(v -> {
+            Intent intent = new Intent(this, CustomerBookingsActivity.class);
+            intent.putExtra("userRole", "owner");
+            startActivity(intent);
+        });
 
         findViewById(R.id.btnSwitchToCustomer).setOnClickListener(v -> {
             db.collection("users").document(mAuth.getUid()).update("role", "customer")
@@ -69,6 +77,25 @@ public class OwnerDashboardActivity extends AppCompatActivity {
         });
 
         checkActiveRentals();
+        calculateTotalEarnings();
+    }
+
+    private void calculateTotalEarnings() {
+        String uid = mAuth.getUid();
+        if (uid == null) return;
+
+        db.collection("rental_sessions")
+                .whereEqualTo("ownerId", uid)
+                .whereEqualTo("status", "completed")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null || value == null) return;
+                    double totalEarned = 0;
+                    for (QueryDocumentSnapshot doc : value) {
+                        Double cost = doc.getDouble("totalCost");
+                        if (cost != null) totalEarned += cost;
+                    }
+                    tvTotalEarnedOverall.setText(String.format("₹%.0f", totalEarned));
+                });
     }
 
     private void checkActiveRentals() {
