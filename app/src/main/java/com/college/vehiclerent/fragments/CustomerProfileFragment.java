@@ -25,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CustomerProfileFragment extends Fragment {
 
-    private TextView tvUserName, tvUserEmail;
+    private TextView tvUserName, tvUserEmail, tvTotalRides, tvUserRating, tvUserLevel;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -39,11 +39,15 @@ public class CustomerProfileFragment extends Fragment {
         
         tvUserName = view.findViewById(R.id.tvUserName);
         tvUserEmail = view.findViewById(R.id.tvUserEmail);
+        tvTotalRides = view.findViewById(R.id.tvTotalRides);
+        tvUserRating = view.findViewById(R.id.tvUserRating);
+        tvUserLevel = view.findViewById(R.id.tvUserLevel);
         
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             tvUserName.setText(user.getDisplayName() != null ? user.getDisplayName() : "Student");
             tvUserEmail.setText(user.getEmail());
+            loadStats(user.getUid());
         }
 
         view.findViewById(R.id.btnShowQR).setOnClickListener(v -> showMyQR());
@@ -83,6 +87,27 @@ public class CustomerProfileFragment extends Fragment {
             
             dialog.show();
         }
+    }
+
+    private void loadStats(String uid) {
+        db.collection("rental_sessions")
+                .whereEqualTo("customerId", uid)
+                .whereEqualTo("status", "completed")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int count = queryDocumentSnapshots.size();
+                    tvTotalRides.setText(String.valueOf(count));
+                    
+                    // Simple level logic
+                    if (count >= 20) tvUserLevel.setText("Platinum");
+                    else if (count >= 10) tvUserLevel.setText("Gold");
+                    else if (count >= 5) tvUserLevel.setText("Silver");
+                    else tvUserLevel.setText("Bronze");
+                    
+                    // Fixed high rating if they have rides
+                    if (count > 0) tvUserRating.setText("5.0");
+                    else tvUserRating.setText("New");
+                });
     }
 
     private void switchRole() {

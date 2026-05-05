@@ -1,93 +1,332 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/background"
-    android:padding="24dp">
+    android:background="@color/background">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile Settings"
-        android:textColor="@color/text_primary"
-        android:textSize="28sp"
-        android:textStyle="bold" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Manage your account and rentals"
-        android:textColor="@color/text_secondary"
-        android:textSize="14sp"
-        android:layout_marginBottom="32dp"/>
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivProfile"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@mipmap/ic_launcher"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
-        android:padding="4dp"
-        app:strokeColor="@color/primary"
-        app:strokeWidth="2dp" />
-
-    <TextView
-        android:id="@+id/tvUserName"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Student Name"
-        android:textColor="@color/text_primary"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp">
 
-    <TextView
-        android:id="@+id/tvUserEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="student@college.edu"
-        android:textColor="@color/text_secondary"
-        android:textSize="14sp"
-        android:layout_marginBottom="32dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnShowQR"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Show My QR Code"
-        app:icon="@android:drawable/ic_menu_camera"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"
-        app:cornerRadius="16dp" />
+            <!-- Profile Header -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="48dp"
+                android:paddingBottom="24dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnEditProfile"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Edit Profile"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:backgroundTint="@color/surface"
-        android:textColor="@color/primary"
-        app:strokeColor="@color/primary"
-        app:strokeWidth="1dp"
-        android:layout_marginBottom="16dp"
-        app:cornerRadius="16dp" />
+                <View
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_circle_glow"
+                    android:alpha="0.4" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSwitchToOwner"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Switch to Owner Mode"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:backgroundTint="@color/accent"
-        android:textColor="@color/text_primary"
-        app:cornerRadius="16dp" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/ic_launcher"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+                    android:padding="2dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="3dp" />
+            </FrameLayout>
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Student Name"
+                android:textColor="@color/text_primary"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvUserEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="student@college.edu"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"/>
+
+            <!-- Quick Stats -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="32dp"
+                android:paddingHorizontal="24dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvTotalRides"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/primary"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rides"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:background="@color/card_outline" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvUserRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5.0"
+                        android:textColor="@color/accent"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rating"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:background="@color/card_outline" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvUserLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bronze"
+                        android:textColor="#FBBF24"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Level"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Action Sections -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="General"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnShowQR"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/card_outline"
+                app:cardBackgroundColor="@color/surface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_circle_glow"
+                        android:alpha="0.1" />
+                    
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="-32dp"
+                        android:src="@android:drawable/ic_menu_camera"
+                        app:tint="@color/primary" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show My QR"
+                            android:textColor="@color/text_primary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Use for quick borrowing"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_media_play"
+                        app:tint="@color/text_muted"
+                        android:rotation="0" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnEditProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/card_outline"
+                app:cardBackgroundColor="@color/surface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_edit"
+                        app:tint="@color/text_secondary" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:text="Edit Profile"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_media_play"
+                        app:tint="@color/text_muted" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Account Actions"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSwitchToOwner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/primary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_send"
+                        app:tint="@color/white" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Switch to Owner"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="List your own vehicle"
+                            android:textColor="#E0E7FF"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_media_play"
+                        app:tint="@color/white" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
