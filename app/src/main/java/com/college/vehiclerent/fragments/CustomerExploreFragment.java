@@ -79,14 +79,12 @@ public class CustomerExploreFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadVehicles();
-        checkActiveSessions();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         if (exploreListener != null) exploreListener.remove();
-        if (activeSessionListener != null) activeSessionListener.remove();
     }
 
     private void setupFilters() {
@@ -146,40 +144,6 @@ public class CustomerExploreFragment extends Fragment {
                         vehicleList.add(v);
                     }
                     applyFilters();
-                });
-    }
-
-    private void checkActiveSessions() {
-        if (mAuth.getUid() == null) return;
-        activeSessionListener = db.collection("rental_sessions")
-                .whereEqualTo("customerId", mAuth.getUid())
-                .whereIn("status", java.util.Arrays.asList("pending", "active", "returning"))
-                .addSnapshotListener((value, error) -> {
-                    if (error != null || value == null || value.isEmpty()) {
-                        btnActiveRide.setVisibility(View.GONE);
-                        return;
-                    }
-
-                    com.google.firebase.firestore.DocumentSnapshot doc = value.getDocuments().get(0);
-                    String status = doc.getString("status");
-                    
-                    if ("pending".equals(status)) {
-                        Intent intent = new Intent(getContext(), RentalConfirmationActivity.class);
-                        intent.putExtra("sessionId", doc.getId());
-                        intent.putExtra("vehicleName", doc.getString("vehicleType"));
-                        intent.putExtra("ownerName", doc.getString("ownerName"));
-                        intent.putExtra("rateHour", doc.getDouble("pricePerHour"));
-                        intent.putExtra("rateDay", doc.getDouble("pricePerDay"));
-                        startActivity(intent);
-                    } else {
-                        btnActiveRide.setVisibility(View.VISIBLE);
-                        btnActiveRide.setOnClickListener(v -> {
-                            Intent intent = new Intent(getContext(), ActiveRentalActivity.class);
-                            intent.putExtra("sessionId", doc.getId());
-                            intent.putExtra("userRole", "customer");
-                            startActivity(intent);
-                        });
-                    }
                 });
     }
 }
