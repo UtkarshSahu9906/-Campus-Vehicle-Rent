@@ -115,11 +115,30 @@ public class CustomerExploreFragment extends Fragment {
         filteredList.clear();
         for (Vehicle v : vehicleList) {
             boolean matchCategory = currentCategory.equals("All") || currentCategory.equalsIgnoreCase(v.getCategory());
-            boolean matchSearch = v.getVehicleType().toLowerCase().contains(currentSearch);
-            if (matchCategory && matchSearch) {
+            
+            // Search in both vehicle type and location
+            String searchLower = currentSearch.toLowerCase();
+            boolean matchType = v.getVehicleType().toLowerCase().contains(searchLower);
+            boolean matchLocation = (v.getLocation() != null && v.getLocation().toLowerCase().contains(searchLower));
+            
+            if (matchCategory && (matchType || matchLocation)) {
                 filteredList.add(v);
             }
         }
+
+        // Sort by location match first if searching
+        if (!currentSearch.isEmpty()) {
+            java.util.Collections.sort(filteredList, (v1, v2) -> {
+                String searchLower = currentSearch.toLowerCase();
+                boolean loc1 = v1.getLocation() != null && v1.getLocation().toLowerCase().contains(searchLower);
+                boolean loc2 = v2.getLocation() != null && v2.getLocation().toLowerCase().contains(searchLower);
+                
+                if (loc1 && !loc2) return -1; // v1 matches location, v2 doesn't -> v1 comes first
+                if (!loc1 && loc2) return 1;  // v2 matches location, v1 doesn't -> v2 comes first
+                return 0; // Both match or both don't
+            });
+        }
+        
         adapter.notifyDataSetChanged();
         
         if (filteredList.isEmpty()) {
