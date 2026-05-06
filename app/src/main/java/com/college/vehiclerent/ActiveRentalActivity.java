@@ -28,8 +28,8 @@ public class ActiveRentalActivity extends AppCompatActivity {
     private ListenerRegistration listener;
     private RentalSession session;
 
-    private TextView tvStatus, tvVehicleName, tvPartnerInfo, tvTimer, tvCost, tvRate, tvWaiting;
-    private View returnCodeCard, enterCodeCard;
+    private TextView tvStatus, tvVehicleName, tvPartnerInfo, tvTimer, tvCost, tvRate, tvWaiting, tvFinalCost, tvFinalDuration;
+    private View returnCodeCard, enterCodeCard, receiptCard, timerCard;
     private android.widget.ImageView ivReturnQR;
     private MaterialButton btnConfirmPickup, btnReturnVehicle, btnVerifyCode;
 
@@ -58,11 +58,15 @@ public class ActiveRentalActivity extends AppCompatActivity {
         tvPartnerInfo = findViewById(R.id.tvPartnerInfo);
         tvTimer = findViewById(R.id.tvTimer);
         tvCost = findViewById(R.id.tvCost);
+        timerCard = findViewById(R.id.timerCard);
         tvRate = findViewById(R.id.tvRate);
         tvWaiting = findViewById(R.id.tvWaiting);
+        tvFinalCost = findViewById(R.id.tvFinalCost);
+        tvFinalDuration = findViewById(R.id.tvFinalDuration);
         
         returnCodeCard = findViewById(R.id.returnCodeCard);
         enterCodeCard = findViewById(R.id.enterCodeCard);
+        receiptCard = findViewById(R.id.receiptCard);
         ivReturnQR = findViewById(R.id.ivReturnQR);
 
         btnConfirmPickup = findViewById(R.id.btnConfirmPickup);
@@ -153,12 +157,26 @@ public class ActiveRentalActivity extends AppCompatActivity {
             case "completed":
                 tvStatus.setText("● Finished");
                 stopTimer();
-                tvCost.setText(String.format("₹%.2f", session.getTotalCost()));
+                timerCard.setVisibility(View.GONE);
+                receiptCard.setVisibility(View.VISIBLE);
+                
+                tvFinalCost.setText(String.format("₹%.2f", session.getTotalCost()));
+                long durationMillis = session.getEndTime() - session.getStartTime();
+                if (durationMillis < 0) durationMillis = 0;
+                
+                int s = (int) (durationMillis / 1000) % 60;
+                int m = (int) ((durationMillis / (1000 * 60)) % 60);
+                int h = (int) ((durationMillis / (1000 * 60 * 60)));
+                tvFinalDuration.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", h, m, s));
+
                 if ("customer".equals(userRole)) {
-                    showRatingDialog();
+                    // Only show rating once
+                    if (getIntent().getBooleanExtra("shouldRate", false)) {
+                        getIntent().removeExtra("shouldRate");
+                        showRatingDialog();
+                    }
                 } else {
-                    Toast.makeText(this, "Rental Completed!", Toast.LENGTH_LONG).show();
-                    finish();
+                    Toast.makeText(this, "Rental Completed!", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -228,6 +246,8 @@ public class ActiveRentalActivity extends AppCompatActivity {
         tvWaiting.setVisibility(View.GONE);
         returnCodeCard.setVisibility(View.GONE);
         enterCodeCard.setVisibility(View.GONE);
+        receiptCard.setVisibility(View.GONE);
+        timerCard.setVisibility(View.VISIBLE);
     }
 
     private void confirmPickup() {
