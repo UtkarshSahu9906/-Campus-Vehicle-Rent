@@ -12,7 +12,10 @@ import com.college.vehiclerent.R;
 import com.college.vehiclerent.model.ChatMessage;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -21,6 +24,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ChatMessage> messages;
     private String currentUserId;
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
     public ChatAdapter(List<ChatMessage> messages) {
         this.messages = messages;
@@ -51,10 +55,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ChatMessage message = messages.get(position);
+        String time = timeFormat.format(new Date(message.getTimestamp()));
+        
         if (holder instanceof SentViewHolder) {
             ((SentViewHolder) holder).tvMessage.setText(message.getMessage());
+            ((SentViewHolder) holder).tvTime.setText(time);
         } else {
             ((ReceivedViewHolder) holder).tvMessage.setText(message.getMessage());
+            ((ReceivedViewHolder) holder).tvTime.setText(time);
         }
     }
 
@@ -64,18 +72,20 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     static class SentViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMessage;
+        TextView tvMessage, tvTime;
         SentViewHolder(View itemView) {
             super(itemView);
             tvMessage = itemView.findViewById(R.id.tvMessage);
+            tvTime = itemView.findViewById(R.id.tvTime);
         }
     }
 
     static class ReceivedViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMessage;
+        TextView tvMessage, tvTime;
         ReceivedViewHolder(View itemView) {
             super(itemView);
             tvMessage = itemView.findViewById(R.id.tvMessage);
+            tvTime = itemView.findViewById(R.id.tvTime);
         }
     }
 }

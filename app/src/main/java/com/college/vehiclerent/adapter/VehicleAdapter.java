@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.college.vehiclerent.AddVehicleActivity;
 import com.college.vehiclerent.R;
 import com.college.vehiclerent.VehicleDetailActivity;
+import com.college.vehiclerent.VehicleHistoryActivity;
 import com.college.vehiclerent.model.Vehicle;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -138,6 +139,14 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
                 } else {
                     confirmDelete(v);
                 }
+            });
+
+            // View Vehicle History
+            holder.itemView.findViewById(R.id.btnViewHistory).setOnClickListener(view -> {
+                Intent intent = new Intent(context, VehicleHistoryActivity.class);
+                intent.putExtra("vehicleId", v.getId());
+                intent.putExtra("vehicleName", v.getVehicleType());
+                context.startActivity(intent);
             });
         } else {
             holder.layoutOwnerControls.setVisibility(View.GONE);

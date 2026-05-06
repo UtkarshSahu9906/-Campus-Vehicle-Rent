@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.college.vehiclerent.ActiveRentalActivity;
+import com.college.vehiclerent.CustomerProfileActivity;
 import com.college.vehiclerent.R;
 import com.college.vehiclerent.model.RentalSession;
 import com.google.android.material.button.MaterialButton;
@@ -48,6 +49,13 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
         
         if (isOwnerMode) {
             holder.tvOwnerName.setText("Rented to: " + (session.getCustomerName() != null ? session.getCustomerName() : "Customer"));
+            holder.tvOwnerName.setOnClickListener(v -> {
+                if (session.getCustomerId() != null) {
+                    Intent intent = new Intent(context, CustomerProfileActivity.class);
+                    intent.putExtra("customerId", session.getCustomerId());
+                    context.startActivity(intent);
+                }
+            });
         } else {
             holder.tvOwnerName.setText("Owner: " + (session.getOwnerName() != null ? session.getOwnerName() : "Owner"));
         }

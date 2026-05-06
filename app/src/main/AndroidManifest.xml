@@ -64,5 +64,14 @@
 
         <!-- RENTAL RETURN CONFIRMATION -->
         <activity android:name=".RentalReturnConfirmationActivity" android:exported="false" />
+
+        <!-- CHAT -->
+        <activity android:name=".ChatActivity" android:exported="false" />
+
+        <!-- CUSTOMER PROFILE VIEW (OWNER) -->
+        <activity android:name=".CustomerProfileActivity" android:exported="false" />
+
+        <!-- VEHICLE HISTORY VIEW (OWNER) -->
+        <activity android:name=".VehicleHistoryActivity" android:exported="false" />
     </application>
 </manifest>

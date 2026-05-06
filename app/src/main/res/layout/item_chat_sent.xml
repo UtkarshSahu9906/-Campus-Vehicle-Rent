@@ -5,24 +5,34 @@
     android:layout_height="wrap_content"
     android:gravity="end"
     android:orientation="vertical"
-    android:paddingVertical="4dp">
+    android:padding="8dp">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
+        android:maxWidth="300dp"
         app:cardBackgroundColor="@color/primary"
         app:cardCornerRadius="16dp"
-        app:cardElevation="0dp">
+        app:cardElevation="1dp"
+        app:contentPadding="12dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.ChatBubble.Sent">
 
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="10dp"
+            android:text="Sent Message"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="10:00 AM"
+        android:textColor="@color/text_muted"
+        android:textSize="11sp" />
 
 </LinearLayout>

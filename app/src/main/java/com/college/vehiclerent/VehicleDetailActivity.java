@@ -55,6 +55,8 @@ public class VehicleDetailActivity extends AppCompatActivity {
         TextView       tvMobile    = findViewById(R.id.tvMobile);
         TextView       tvLocation  = findViewById(R.id.tvLocation);
         MaterialButton btnWhatsApp = findViewById(R.id.btnWhatsApp);
+        MaterialButton btnCall     = findViewById(R.id.btnCall);
+        MaterialButton btnChat     = findViewById(R.id.btnChat);
         TextView       tvAvgRating = findViewById(R.id.tvAvgRating);
         TextView       tvRatingCnt = findViewById(R.id.tvRatingCount);
         RatingBar      ratingBar   = findViewById(R.id.ratingBar);
@@ -117,8 +119,10 @@ public class VehicleDetailActivity extends AppCompatActivity {
         String ownerUid = getIntent().getStringExtra("ownerUid");
         String currentUid = FirebaseAuth.getInstance().getUid();
 
-        // WhatsApp deep link
+        // Contact Options
         btnWhatsApp.setOnClickListener(v -> openWhatsApp(mobile, vehicleType));
+        btnCall.setOnClickListener(v -> dialNumber(mobile));
+        btnChat.setOnClickListener(v -> openChat(ownerUid, ownerName));
 
         // If owner is viewing their own vehicle, change "Contact" to "Release Vehicle"
         if (currentUid != null && currentUid.equals(ownerUid)) {
@@ -126,8 +130,11 @@ public class VehicleDetailActivity extends AppCompatActivity {
             btnWhatsApp.setIconResource(android.R.drawable.ic_menu_camera);
             btnWhatsApp.setOnClickListener(v -> scanCustomerQR());
             
+            btnCall.setVisibility(View.GONE);
+            btnChat.setVisibility(View.GONE);
+            
             // Hide rating section for owner
-            findViewById(R.id.ratingBar).setVisibility( View.GONE);
+            findViewById(R.id.ratingBar).setVisibility(View.GONE);
             findViewById(R.id.btnSubmitRating).setVisibility(View.GONE);
         }
     }
@@ -170,6 +177,23 @@ public class VehicleDetailActivity extends AppCompatActivity {
                     Toast.makeText(this, "Rental session created. Waiting for customer confirmation.", Toast.LENGTH_LONG).show();
                     finish();
                 });
+    }
+
+    private void dialNumber(String mobile) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + mobile));
+        startActivity(intent);
+    }
+
+    private void openChat(String receiverId, String receiverName) {
+        if (receiverId == null || receiverId.equals(FirebaseAuth.getInstance().getUid())) {
+            Toast.makeText(this, "You cannot chat with yourself", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("receiverId", receiverId);
+        intent.putExtra("receiverName", receiverName);
+        startActivity(intent);
     }
 
     private void openWhatsApp(String mobile, String vehicleType) {
