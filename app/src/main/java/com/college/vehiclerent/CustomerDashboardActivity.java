@@ -89,7 +89,6 @@ public class CustomerDashboardActivity extends AppCompatActivity {
                     String sessionId = doc.getId();
                     
                     if ("pending".equals(status)) {
-                        // Avoid infinite loop if activity is already being shown for THIS session
                         if (sessionId.equals(lastShownPendingId)) return;
                         lastShownPendingId = sessionId;
 
@@ -100,8 +99,16 @@ public class CustomerDashboardActivity extends AppCompatActivity {
                         intent.putExtra("rateHour", doc.getDouble("pricePerHour") != null ? doc.getDouble("pricePerHour") : 0.0);
                         intent.putExtra("rateDay", doc.getDouble("pricePerDay") != null ? doc.getDouble("pricePerDay") : 0.0);
                         startActivity(intent);
+                    } else if ("returning".equals(status)) {
+                        if (sessionId.equals(lastShownPendingId)) return;
+                        lastShownPendingId = sessionId;
+
+                        Intent intent = new Intent(this, RentalReturnConfirmationActivity.class);
+                        intent.putExtra("sessionId", sessionId);
+                        intent.putExtra("vehicleName", doc.getString("vehicleType"));
+                        intent.putExtra("totalCost", doc.getDouble("totalCost") != null ? doc.getDouble("totalCost") : 0.0);
+                        startActivity(intent);
                     } else {
-                        // Reset when no longer pending
                         lastShownPendingId = "";
                     }
                 });

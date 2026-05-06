@@ -75,7 +75,7 @@ public class OwnerFleetFragment extends Fragment {
         if (mAuth.getUid() == null) return;
         
         fleetListener = db.collection("vehicles")
-                .whereEqualTo("ownerId", mAuth.getUid())
+                .whereEqualTo("ownerUid", mAuth.getUid())
                 .addSnapshotListener((value, error) -> {
                     if (error != null || value == null) return;
                     

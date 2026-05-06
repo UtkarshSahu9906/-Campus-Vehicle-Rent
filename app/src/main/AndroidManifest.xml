@@ -62,5 +62,7 @@
         <!-- CUSTOMER BOOKINGS -->
         <activity android:name=".CustomerBookingsActivity" android:exported="false" />
 
+        <!-- RENTAL RETURN CONFIRMATION -->
+        <activity android:name=".RentalReturnConfirmationActivity" android:exported="false" />
     </application>
 </manifest>

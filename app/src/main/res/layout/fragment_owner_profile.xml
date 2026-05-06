@@ -63,6 +63,19 @@
         android:textSize="16sp"
         android:layout_marginBottom="16dp"
         app:cornerRadius="16dp" />
+    
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnScanReturn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Scan for Return"
+        app:icon="@android:drawable/ic_menu_camera"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
+        app:backgroundTint="@color/accent"
+        android:textColor="@color/black"
+        app:cornerRadius="16dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSwitchToCustomer"

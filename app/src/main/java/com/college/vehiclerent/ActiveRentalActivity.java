@@ -77,7 +77,16 @@ public class ActiveRentalActivity extends AppCompatActivity {
                 .addSnapshotListener((snapshot, e) -> {
                     if (e != null || snapshot == null || !snapshot.exists()) return;
                     session = snapshot.toObject(RentalSession.class);
-                    if (session != null) updateUI();
+                    if (session != null) {
+                        updateUI();
+                        
+                        // Check for auto-initiate return if owner just scanned from profile
+                        if (getIntent().getBooleanExtra("autoInitiateReturn", false) && "active".equals(session.getStatus()) && "owner".equals(userRole)) {
+                            // Remove flag so it doesn't loop
+                            getIntent().removeExtra("autoInitiateReturn");
+                            initiateReturn();
+                        }
+                    }
                 });
     }
 
@@ -111,6 +120,8 @@ public class ActiveRentalActivity extends AppCompatActivity {
                 if ("customer".equals(userRole)) {
                     btnReturnVehicle.setVisibility(View.VISIBLE);
                 } else {
+                    btnReturnVehicle.setVisibility(View.VISIBLE);
+                    btnReturnVehicle.setText("Initiate Return (Scan)");
                     tvWaiting.setVisibility(View.VISIBLE);
                     tvWaiting.setText("Ride in progress...");
                 }
@@ -225,7 +236,13 @@ public class ActiveRentalActivity extends AppCompatActivity {
     private void initiateReturn() {
         db.collection("rental_sessions").document(sessionId)
                 .update("status", "returning", "endTime", System.currentTimeMillis())
-                .addOnSuccessListener(a -> Toast.makeText(this, "Show the QR code to the owner", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(a -> {
+                    if ("customer".equals(userRole)) {
+                        Toast.makeText(this, "Process started. Waiting for owner to confirm bill.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Return initiated. Waiting for customer confirmation.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void scanReturnQR() {
