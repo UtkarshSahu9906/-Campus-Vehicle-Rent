@@ -23,14 +23,25 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.components.XAxis;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class OwnerHomeFragment extends Fragment {
 
-    private TextView tvTotalEarnedOverall, tvEarnedMonth, tvTotalTrips, tvEmpty;
+    private TextView tvTotalEarnedOverall, tvEarnedMonth, tvRunningVehicles, tvEmpty;
     private View btnActiveRental;
     private RecyclerView rvRecentRentals;
+    private LineChart earningsChart;
     
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -50,10 +61,13 @@ public class OwnerHomeFragment extends Fragment {
         
         tvTotalEarnedOverall = view.findViewById(R.id.tvTotalEarnedOverall);
         tvEarnedMonth = view.findViewById(R.id.tvEarnedMonth);
-        tvTotalTrips = view.findViewById(R.id.tvTotalTrips);
+        tvRunningVehicles = view.findViewById(R.id.tvRunningVehicles);
         tvEmpty = view.findViewById(R.id.tvEmpty);
         btnActiveRental = view.findViewById(R.id.btnActiveRental);
         rvRecentRentals = view.findViewById(R.id.rvRecentRentals);
+        earningsChart = view.findViewById(R.id.earningsChart);
+        
+        setupChart();
         
         recentList = new ArrayList<>();
         adapter = new BookingAdapter(getContext(), recentList, true);
@@ -87,22 +101,39 @@ public class OwnerHomeFragment extends Fragment {
                     
                     double totalEarned = 0;
                     double monthEarned = 0;
-                    int trips = 0;
+                    int running = 0;
                     
-                    long currentMonthStart = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000); // Rough 30 days
+                    Map<Integer, Double> dayEarnings = new TreeMap<>();
+                    // Init last 7 days with 0
+                    for (int i = 0; i < 7; i++) dayEarnings.put(i, 0.0);
+                    
+                    long now = System.currentTimeMillis();
+                    long currentMonthStart = now - (30L * 24 * 60 * 60 * 1000);
                     
                     recentList.clear();
                     
                     for (QueryDocumentSnapshot doc : value) {
                         RentalSession session = doc.toObject(RentalSession.class);
                         session.setId(doc.getId());
+                        String status = session.getStatus();
                         
-                        if ("completed".equals(session.getStatus())) {
+                        if ("active".equals(status) || "returning".equals(status)) {
+                            running++;
+                        }
+                        
+                        if ("completed".equals(status)) {
                             totalEarned += session.getTotalCost();
-                            trips++;
                             
                             if (session.getEndTime() > currentMonthStart) {
                                 monthEarned += session.getTotalCost();
+                            }
+                            
+                            // For chart: check if it's within last 7 days
+                            long diff = now - session.getEndTime();
+                            int dayIndex = (int) (diff / (24 * 60 * 60 * 1000));
+                            if (dayIndex >= 0 && dayIndex < 7) {
+                                double currentDayVal = dayEarnings.get(6 - dayIndex) != null ? dayEarnings.get(6 - dayIndex) : 0;
+                                dayEarnings.put(6 - dayIndex, currentDayVal + session.getTotalCost());
                             }
                         }
                         
@@ -111,11 +142,63 @@ public class OwnerHomeFragment extends Fragment {
                     
                     tvTotalEarnedOverall.setText(String.format("₹%.0f", totalEarned));
                     tvEarnedMonth.setText(String.format("₹%.0f", monthEarned));
-                    tvTotalTrips.setText(String.valueOf(trips));
+                    tvRunningVehicles.setText(String.valueOf(running));
                     
+                    updateChartData(dayEarnings);
                     adapter.notifyDataSetChanged();
                     tvEmpty.setVisibility(recentList.isEmpty() ? View.VISIBLE : View.GONE);
                 });
+    }
+
+    private void setupChart() {
+        earningsChart.getDescription().setEnabled(false);
+        earningsChart.setDrawGridBackground(false);
+        earningsChart.getLegend().setEnabled(false);
+        earningsChart.setTouchEnabled(false);
+        
+        XAxis xAxis = earningsChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setTextColor(getResources().getColor(R.color.text_secondary));
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                // Simplified: show "6d ago" ... "Today"
+                int val = (int) value;
+                if (val == 6) return "Today";
+                return (6 - val) + "d ago";
+            }
+        });
+
+        earningsChart.getAxisLeft().setDrawGridLines(true);
+        earningsChart.getAxisLeft().setGridColor(getResources().getColor(R.color.card_outline));
+        earningsChart.getAxisLeft().setTextColor(getResources().getColor(R.color.text_secondary));
+        earningsChart.getAxisRight().setEnabled(false);
+    }
+
+    private void updateChartData(Map<Integer, Double> dayEarnings) {
+        List<Entry> entries = new ArrayList<>();
+        for (Map.Entry<Integer, Double> entry : dayEarnings.entrySet()) {
+            entries.add(new Entry(entry.getKey(), entry.getValue().floatValue()));
+        }
+
+        LineDataSet dataSet = new LineDataSet(entries, "Daily Earnings");
+        dataSet.setColor(getResources().getColor(R.color.primary));
+        dataSet.setLineWidth(3f);
+        dataSet.setDrawCircles(true);
+        dataSet.setCircleColor(getResources().getColor(R.color.primary));
+        dataSet.setCircleRadius(4f);
+        dataSet.setDrawValues(false);
+        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        
+        // Fill gradient
+        dataSet.setDrawFilled(true);
+        dataSet.setFillColor(getResources().getColor(R.color.primary));
+        dataSet.setFillAlpha(30);
+
+        LineData lineData = new LineData(dataSet);
+        earningsChart.setData(lineData);
+        earningsChart.invalidate();
     }
 
     private void listenActiveRentals() {

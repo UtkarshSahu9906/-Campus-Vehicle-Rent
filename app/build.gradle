@@ -60,4 +60,6 @@ dependencies {
     // ZXing for QR Code generation and scanning
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation 'com.google.zxing:core:3.5.3'
+    // MPAndroidChart for analytics graphs
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
