@@ -52,6 +52,15 @@ public class RentalConfirmationActivity extends AppCompatActivity {
                         "startTime", System.currentTimeMillis(),
                         "customerName", name)
                 .addOnSuccessListener(a -> {
+                    // Mark vehicle as unavailable
+                    db.collection("rental_sessions").document(sessionId).get()
+                            .addOnSuccessListener(doc -> {
+                                String vId = doc.getString("vehicleId");
+                                if (vId != null) {
+                                    db.collection("vehicles").document(vId).update("available", false);
+                                }
+                            });
+                    
                     Toast.makeText(this, "Ride Started!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, ActiveRentalActivity.class);
                     intent.putExtra("sessionId", sessionId);

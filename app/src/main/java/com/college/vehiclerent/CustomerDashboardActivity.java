@@ -84,9 +84,25 @@ public class CustomerDashboardActivity extends AppCompatActivity {
                 .addSnapshotListener((value, error) -> {
                     if (error != null || value == null || value.isEmpty()) return;
 
-                    com.google.firebase.firestore.DocumentSnapshot doc = value.getDocuments().get(0);
-                    String status = doc.getString("status");
-                    String sessionId = doc.getId();
+                    com.google.firebase.firestore.DocumentSnapshot targetDoc = null;
+                    
+                    // Prioritize pending or returning sessions over active ones
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : value.getDocuments()) {
+                        String s = doc.getString("status");
+                        if ("pending".equals(s) || "returning".equals(s)) {
+                            targetDoc = doc;
+                            break; 
+                        }
+                    }
+                    
+                    // If no pending/returning found, just ignore (or we could handle active but dashboard doesn't need to)
+                    if (targetDoc == null) {
+                        lastShownPendingId = "";
+                        return;
+                    }
+
+                    String status = targetDoc.getString("status");
+                    String sessionId = targetDoc.getId();
                     
                     if ("pending".equals(status)) {
                         if (sessionId.equals(lastShownPendingId)) return;
@@ -94,10 +110,10 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(this, RentalConfirmationActivity.class);
                         intent.putExtra("sessionId", sessionId);
-                        intent.putExtra("vehicleName", doc.getString("vehicleType"));
-                        intent.putExtra("ownerName", doc.getString("ownerName"));
-                        intent.putExtra("rateHour", doc.getDouble("pricePerHour") != null ? doc.getDouble("pricePerHour") : 0.0);
-                        intent.putExtra("rateDay", doc.getDouble("pricePerDay") != null ? doc.getDouble("pricePerDay") : 0.0);
+                        intent.putExtra("vehicleName", targetDoc.getString("vehicleType"));
+                        intent.putExtra("ownerName", targetDoc.getString("ownerName"));
+                        intent.putExtra("rateHour", targetDoc.getDouble("pricePerHour") != null ? targetDoc.getDouble("pricePerHour") : 0.0);
+                        intent.putExtra("rateDay", targetDoc.getDouble("pricePerDay") != null ? targetDoc.getDouble("pricePerDay") : 0.0);
                         startActivity(intent);
                     } else if ("returning".equals(status)) {
                         if (sessionId.equals(lastShownPendingId)) return;
@@ -105,11 +121,9 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(this, RentalReturnConfirmationActivity.class);
                         intent.putExtra("sessionId", sessionId);
-                        intent.putExtra("vehicleName", doc.getString("vehicleType"));
-                        intent.putExtra("totalCost", doc.getDouble("totalCost") != null ? doc.getDouble("totalCost") : 0.0);
+                        intent.putExtra("vehicleName", targetDoc.getString("vehicleType"));
+                        intent.putExtra("totalCost", targetDoc.getDouble("totalCost") != null ? targetDoc.getDouble("totalCost") : 0.0);
                         startActivity(intent);
-                    } else {
-                        lastShownPendingId = "";
                     }
                 });
     }

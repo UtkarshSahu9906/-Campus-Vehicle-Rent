@@ -24,6 +24,7 @@ public class ActiveRentalActivity extends AppCompatActivity {
     private String sessionId;
     private String userRole; // "owner" or "customer"
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private ListenerRegistration listener;
     private RentalSession session;
 
@@ -43,6 +44,7 @@ public class ActiveRentalActivity extends AppCompatActivity {
         sessionId = getIntent().getStringExtra("sessionId");
         userRole = getIntent().getStringExtra("userRole");
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         initViews();
         startListening();
@@ -119,9 +121,17 @@ public class ActiveRentalActivity extends AppCompatActivity {
                 startTimer();
                 if ("customer".equals(userRole)) {
                     btnReturnVehicle.setVisibility(View.VISIBLE);
+                    btnReturnVehicle.setText("End Ride (Show QR)");
+                    btnReturnVehicle.setOnClickListener(v -> {
+                        returnCodeCard.setVisibility(View.VISIBLE);
+                        android.graphics.Bitmap qr = com.college.vehiclerent.utils.QRUtils.generateQRCode(mAuth.getUid(), 500, 500);
+                        ivReturnQR.setImageBitmap(qr);
+                        Toast.makeText(this, "Show this QR to the owner to end ride", Toast.LENGTH_LONG).show();
+                    });
                 } else {
                     btnReturnVehicle.setVisibility(View.VISIBLE);
                     btnReturnVehicle.setText("Initiate Return (Scan)");
+                    btnReturnVehicle.setOnClickListener(v -> initiateReturn());
                     tvWaiting.setVisibility(View.VISIBLE);
                     tvWaiting.setText("Ride in progress...");
                 }
@@ -234,8 +244,13 @@ public class ActiveRentalActivity extends AppCompatActivity {
     }
 
     private void initiateReturn() {
+        long endTime = System.currentTimeMillis();
+        double finalCost = calculateCostForDuration(session.getStartTime(), endTime, session.getPricePerHour(), session.getPricePerDay());
+        
         db.collection("rental_sessions").document(sessionId)
-                .update("status", "returning", "endTime", System.currentTimeMillis())
+                .update("status", "returning", 
+                        "endTime", endTime,
+                        "totalCost", finalCost)
                 .addOnSuccessListener(a -> {
                     if ("customer".equals(userRole)) {
                         Toast.makeText(this, "Process started. Waiting for owner to confirm bill.", Toast.LENGTH_SHORT).show();
@@ -243,6 +258,27 @@ public class ActiveRentalActivity extends AppCompatActivity {
                         Toast.makeText(this, "Return initiated. Waiting for customer confirmation.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private double calculateCostForDuration(long start, long end, double priceHour, double priceDay) {
+        long duration = end - start;
+        double hours = duration / (1000.0 * 60 * 60);
+        
+        double finalCost = 0;
+        if (priceDay > 0) {
+            int days = (int) (hours / 24);
+            double remainingHours = hours % 24;
+            double hoursCost = remainingHours * priceHour;
+            if (hoursCost > priceDay) hoursCost = priceDay;
+            finalCost = (days * priceDay) + hoursCost;
+        } else {
+            finalCost = hours * priceHour;
+        }
+        
+        // Minimum 1 hour charge
+        if (finalCost < priceHour) finalCost = priceHour;
+        
+        return finalCost;
     }
 
     private void scanReturnQR() {
@@ -313,37 +349,7 @@ public class ActiveRentalActivity extends AppCompatActivity {
     }
 
     private void calculateFinalCost() {
-        long duration = session.getEndTime() - session.getStartTime();
-        
-        // Duration in hours
-        double hours = duration / (1000.0 * 60 * 60);
-        
-        // Dual pricing logic:
-        double finalCost = 0;
-        double pricePerHour = session.getPricePerHour();
-        double pricePerDay = session.getPricePerDay();
-        
-        // If pricePerDay is set and valid, use the best combination
-        if (pricePerDay > 0) {
-            int days = (int) (hours / 24);
-            double remainingHours = hours % 24;
-            
-            // If remaining hours cost more than a full day, cap it to a full day cost
-            double hoursCost = remainingHours * pricePerHour;
-            if (hoursCost > pricePerDay) {
-                hoursCost = pricePerDay;
-            }
-            finalCost = (days * pricePerDay) + hoursCost;
-        } else {
-            finalCost = hours * pricePerHour;
-        }
-        
-        // Enforce minimum 1 hour cost
-        if (finalCost < pricePerHour) {
-            finalCost = pricePerHour;
-        }
-
-        session.setTotalCost(finalCost);
+        session.setTotalCost(calculateCostForDuration(session.getStartTime(), session.getEndTime(), session.getPricePerHour(), session.getPricePerDay()));
     }
 
     @Override
