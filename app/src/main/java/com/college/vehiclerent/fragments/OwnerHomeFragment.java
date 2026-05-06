@@ -213,6 +213,12 @@ public class OwnerHomeFragment extends Fragment {
                     }
                     btnActiveRental.setVisibility(View.VISIBLE);
                     
+                    int count = value.size();
+                    TextView tvBanner = btnActiveRental.findViewById(R.id.tvBannerTitle); // Need to add ID to XML
+                    if (tvBanner != null) {
+                        tvBanner.setText(count > 1 ? count + " Active Rentals Tracked" : "Active Rental Detected");
+                    }
+                    
                     com.google.firebase.firestore.DocumentSnapshot doc = value.getDocuments().get(0);
                     btnActiveRental.setOnClickListener(v -> {
                         Intent intent = new Intent(getContext(), ActiveRentalActivity.class);

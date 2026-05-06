@@ -73,6 +73,15 @@
                 android:textStyle="bold" />
                 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnQuickReturn"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quick Return"
+                android:visibility="gone"
+                android:textColor="@color/accent" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnViewDetails"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
